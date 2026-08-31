@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  requester_id: 1
+  recipient_id: 1
+  connection_type: MyString
+  status: MyString
+
+two:
+  requester_id: 1
+  recipient_id: 1
+  connection_type: MyString
+  status: MyString
