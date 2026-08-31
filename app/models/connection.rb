@@ -2,6 +2,8 @@ class Connection < ApplicationRecord
   belongs_to :requester, class_name: "User"
   belongs_to :recipient, class_name: "User"
 
+  has_one :conversation, dependent: :destroy
+
   validates :requester_id, presence: true
   validates :recipient_id, presence: true
   validates :connection_type, inclusion: { in: %w[friendship romantic] }

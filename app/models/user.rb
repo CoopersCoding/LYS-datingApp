@@ -4,6 +4,18 @@ class User < ApplicationRecord
   has_many :user_interests, dependent: :destroy
   has_many :interests, through: :user_interests
 
+  has_many :sent_connections,
+           class_name: "Connection",
+           foreign_key: :requester_id,
+           dependent: :destroy
+
+  has_many :received_connections,
+           class_name: "Connection",
+           foreign_key: :recipient_id,
+           dependent: :destroy
+
+  has_many :messages, dependent: :destroy
+
   validates :first_name, presence: true
   validates :last_name, presence: true
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_31_132107) do
+ActiveRecord::Schema.define(version: 2026_08_31_152844) do
 
   create_table "connections", force: :cascade do |t|
     t.integer "requester_id"
@@ -21,11 +21,28 @@ ActiveRecord::Schema.define(version: 2026_08_31_132107) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.integer "connection_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["connection_id"], name: "index_conversations_on_connection_id"
+  end
+
   create_table "interests", force: :cascade do |t|
     t.string "name"
     t.string "category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "user_interests", force: :cascade do |t|
@@ -54,6 +71,9 @@ ActiveRecord::Schema.define(version: 2026_08_31_132107) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "conversations", "connections"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
   add_foreign_key "user_interests", "interests"
   add_foreign_key "user_interests", "users"
 end
