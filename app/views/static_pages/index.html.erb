@@ -1,1 +1,478 @@
-Hello World!
+<div class="lys-root" data-lys-root>
+  <section class="lys-welcome" data-welcome-screen>
+    <header class="lys-landing-nav">
+      <button class="lys-brand lys-brand-button" type="button" aria-label="Last Year Single home">
+        <span class="lys-brand-mark">LYS</span>
+        <span class="lys-brand-name">Last Year Single</span>
+      </button>
+
+      <div class="lys-landing-actions">
+        <button class="lys-link-button" type="button" data-enter-app="discover">Member preview</button>
+        <button class="lys-button lys-button-small" type="button" data-open-signup>Join the community</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="lys-hero">
+        <div class="lys-hero-copy">
+          <p class="lys-eyebrow">A more thoughtful way to connect</p>
+          <h1>Meet people who feel like <em>your people.</em></h1>
+          <p class="lys-hero-lede">
+            Friendship, possibility, and real connection in one welcoming community.
+            Start with what you have in common and let the rest unfold naturally.
+          </p>
+
+          <div class="lys-hero-actions">
+            <button class="lys-button" type="button" data-open-signup>Create your profile</button>
+            <button class="lys-button lys-button-ghost" type="button" data-enter-app="discover">Explore the experience</button>
+          </div>
+
+          <div class="lys-hero-proof" aria-label="Community benefits">
+            <div>
+              <strong>Intentional</strong>
+              <span>Choose friendship, dating, or both.</span>
+            </div>
+            <div>
+              <strong>Interest-led</strong>
+              <span>Connect around what actually matters to you.</span>
+            </div>
+            <div>
+              <strong>Human</strong>
+              <span>Profiles designed to start real conversations.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lys-hero-visual" aria-label="Last Year Single profile preview">
+          <div class="lys-editorial-card lys-editorial-card-main">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=85" alt="Smiling community member" />
+            <div class="lys-editorial-overlay">
+              <span class="lys-match-pill">88% in common</span>
+              <div>
+                <h2>Mia, 37</h2>
+                <p>Fort Myers, Florida</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lys-editorial-note lys-editorial-note-top">
+            <span class="lys-note-dot"></span>
+            <div>
+              <strong>6 shared interests</strong>
+              <span>Travel - Live music - Faith</span>
+            </div>
+          </div>
+
+          <div class="lys-editorial-note lys-editorial-note-bottom">
+            <span class="lys-audio-mini">Play</span>
+            <div>
+              <strong>Hear their hello</strong>
+              <span>A quick 18-second voice intro</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lys-positioning">
+        <p class="lys-eyebrow">Connection without the noise</p>
+        <h2>Simple enough to feel easy. Thoughtful enough to mean something.</h2>
+        <div class="lys-positioning-grid">
+          <article>
+            <span>01</span>
+            <h3>Choose your lane</h3>
+            <p>Keep friendship and romantic interest clear so every connection starts with shared expectations.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>See what you share</h3>
+            <p>Your interests shape the discovery experience and bring the strongest common ground to the surface.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Start naturally</h3>
+            <p>Connect, message, and move from profile to conversation without a cluttered or game-like experience.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <section class="lys-app-shell" data-app-shell hidden>
+    <header class="lys-app-header">
+      <button class="lys-brand lys-brand-button" type="button" data-nav="discover" aria-label="Go to Discover">
+        <span class="lys-brand-mark">LYS</span>
+        <span class="lys-brand-name">Last Year Single</span>
+      </button>
+
+      <nav class="lys-desktop-nav" aria-label="Main navigation">
+        <button type="button" data-nav="discover" class="is-active">Discover</button>
+        <button type="button" data-nav="community">My Community</button>
+        <button type="button" data-nav="messages">Messages</button>
+      </nav>
+
+      <button class="lys-profile-chip" type="button" data-nav="profile" aria-label="Open profile">
+        <span>BC</span>
+        <span class="lys-profile-chip-copy">
+          <strong>Brian</strong>
+          <small>My profile</small>
+        </span>
+      </button>
+    </header>
+
+    <main class="lys-app-main">
+      <section class="lys-app-page lys-discover-page is-active" data-page="discover">
+        <aside class="lys-discover-intro">
+          <p class="lys-eyebrow">Discover</p>
+          <h1>People worth meeting.</h1>
+          <p>Browse one thoughtful profile at a time. Switch lanes whenever you want.</p>
+
+          <div class="lys-intent-switch" role="group" aria-label="Connection intent">
+            <button type="button" class="is-active" data-pool="friendship">Friendship</button>
+            <button type="button" data-pool="romance">Dating</button>
+          </div>
+
+          <div class="lys-discover-tip">
+            <span>+</span>
+            <p><strong>Why this person?</strong><br />Shared interests and compatible intent move stronger connections higher.</p>
+          </div>
+        </aside>
+
+        <div class="lys-profile-stream" data-profile-stream>
+          <article class="lys-profile-card" data-profile data-intent="friendship">
+            <div class="lys-profile-photo-wrap">
+              <img class="lys-profile-photo" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1100&q=85" alt="Portrait of Maya" />
+              <div class="lys-photo-topline">
+                <span class="lys-match-pill">91% in common</span>
+                <button type="button" class="lys-circle-button" aria-label="Save Maya">Save</button>
+              </div>
+            </div>
+
+            <div class="lys-profile-body">
+              <div class="lys-profile-heading">
+                <div>
+                  <p class="lys-profile-kicker">Fort Myers - 4 miles away</p>
+                  <h2>Maya, 41</h2>
+                </div>
+                <span class="lys-intent-badge">Friendship</span>
+              </div>
+
+              <p class="lys-profile-quote">"Give me a good patio, a long conversation, and somewhere new to explore on a Saturday."</p>
+
+              <div class="lys-interest-row" aria-label="Shared interests">
+                <span>Travel</span><span>Faith</span><span>Live music</span><span>Local food</span><span>Walking</span>
+              </div>
+
+              <div class="lys-profile-details">
+                <div>
+                  <span class="lys-detail-label">About Maya</span>
+                  <p>Community-minded, curious, and always planning the next weekend adventure. She is looking for more local friends who enjoy actually making plans.</p>
+                </div>
+                <button class="lys-audio-button" type="button" data-audio-button>
+                  <span class="lys-audio-icon">Play</span>
+                  <span><strong>Listen to Maya's hello</strong><small>0:18 voice intro</small></span>
+                </button>
+              </div>
+
+              <div class="lys-profile-actions">
+                <button class="lys-button lys-button-ghost" type="button" data-pass>Not now</button>
+                <button class="lys-button" type="button" data-connect="Maya">Connect Now</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="lys-profile-card" data-profile data-intent="friendship">
+            <div class="lys-profile-photo-wrap">
+              <img class="lys-profile-photo" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1100&q=85" alt="Portrait of Daniel" />
+              <div class="lys-photo-topline">
+                <span class="lys-match-pill">84% in common</span>
+                <button type="button" class="lys-circle-button" aria-label="Save Daniel">Save</button>
+              </div>
+            </div>
+
+            <div class="lys-profile-body">
+              <div class="lys-profile-heading">
+                <div>
+                  <p class="lys-profile-kicker">Cape Coral - 9 miles away</p>
+                  <h2>Daniel, 39</h2>
+                </div>
+                <span class="lys-intent-badge">Friendship</span>
+              </div>
+
+              <p class="lys-profile-quote">"I am happiest near the water, at a concert, or around a table with people who make me laugh."</p>
+              <div class="lys-interest-row"><span>Boating</span><span>Concerts</span><span>Cooking</span><span>Volunteering</span></div>
+              <div class="lys-profile-actions">
+                <button class="lys-button lys-button-ghost" type="button" data-pass>Not now</button>
+                <button class="lys-button" type="button" data-connect="Daniel">Connect Now</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="lys-profile-card" data-profile data-intent="romance" hidden>
+            <div class="lys-profile-photo-wrap">
+              <img class="lys-profile-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85" alt="Portrait of Olivia" />
+              <div class="lys-photo-topline">
+                <span class="lys-match-pill">89% in common</span>
+                <button type="button" class="lys-circle-button" aria-label="Save Olivia">Save</button>
+              </div>
+            </div>
+
+            <div class="lys-profile-body">
+              <div class="lys-profile-heading">
+                <div>
+                  <p class="lys-profile-kicker">Naples - 22 miles away</p>
+                  <h2>Olivia, 38</h2>
+                </div>
+                <span class="lys-intent-badge lys-intent-badge-romance">Dating</span>
+              </div>
+
+              <p class="lys-profile-quote">"I value kindness, a great sense of humor, and people who are genuinely excited about their life."</p>
+              <div class="lys-interest-row"><span>Travel</span><span>Fitness</span><span>Faith</span><span>Photography</span><span>Coffee</span></div>
+              <div class="lys-profile-details">
+                <div>
+                  <span class="lys-detail-label">About Olivia</span>
+                  <p>Creative, grounded, and adventurous. She loves a spontaneous day trip as much as a quiet night cooking at home.</p>
+                </div>
+                <button class="lys-audio-button" type="button" data-audio-button>
+                  <span class="lys-audio-icon">Play</span>
+                  <span><strong>Listen to Olivia's hello</strong><small>0:16 voice intro</small></span>
+                </button>
+              </div>
+              <div class="lys-profile-actions">
+                <button class="lys-button lys-button-ghost" type="button" data-pass>Not now</button>
+                <button class="lys-button" type="button" data-connect="Olivia">I'm Interested</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="lys-profile-card" data-profile data-intent="romance" hidden>
+            <div class="lys-profile-photo-wrap">
+              <img class="lys-profile-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1100&q=85" alt="Portrait of Marcus" />
+              <div class="lys-photo-topline">
+                <span class="lys-match-pill">82% in common</span>
+                <button type="button" class="lys-circle-button" aria-label="Save Marcus">Save</button>
+              </div>
+            </div>
+            <div class="lys-profile-body">
+              <div class="lys-profile-heading">
+                <div>
+                  <p class="lys-profile-kicker">Estero - 13 miles away</p>
+                  <h2>Marcus, 43</h2>
+                </div>
+                <span class="lys-intent-badge lys-intent-badge-romance">Dating</span>
+              </div>
+              <p class="lys-profile-quote">"Good conversation beats a perfect plan. I like people who are warm, curious, and up for trying something new."</p>
+              <div class="lys-interest-row"><span>Running</span><span>Travel</span><span>Books</span><span>Live music</span></div>
+              <div class="lys-profile-actions">
+                <button class="lys-button lys-button-ghost" type="button" data-pass>Not now</button>
+                <button class="lys-button" type="button" data-connect="Marcus">I'm Interested</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lys-app-page lys-community-page" data-page="community" hidden>
+        <div class="lys-page-heading">
+          <div>
+            <p class="lys-eyebrow">My Community</p>
+            <h1>The people you've connected with.</h1>
+            <p>Keep friendship and dating connections clear, while everything still lives in one simple place.</p>
+          </div>
+          <div class="lys-filter-pills" role="group" aria-label="Community filters">
+            <button type="button" class="is-active" data-community-filter="all">All</button>
+            <button type="button" data-community-filter="friendship">Friends</button>
+            <button type="button" data-community-filter="romance">Dating</button>
+          </div>
+        </div>
+
+        <div class="lys-community-grid">
+          <article class="lys-community-card" data-community-card data-intent="friendship">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=85" alt="Mia" />
+            <div class="lys-community-card-body">
+              <div><h2>Mia, 37</h2><span>Fort Myers</span></div>
+              <span class="lys-intent-badge">Friendship</span>
+              <p>You both love travel, live music, and local food.</p>
+              <div class="lys-community-actions">
+                <button type="button" class="lys-text-action" data-message-nav>Message</button>
+                <button type="button" class="lys-circle-button" aria-label="More options">More</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="lys-community-card" data-community-card data-intent="friendship">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=85" alt="Noah" />
+            <div class="lys-community-card-body">
+              <div><h2>Noah, 42</h2><span>Cape Coral</span></div>
+              <span class="lys-intent-badge">Friendship</span>
+              <p>You connected over volunteering, fitness, and being outdoors.</p>
+              <div class="lys-community-actions">
+                <button type="button" class="lys-text-action" data-message-nav>Message</button>
+                <button type="button" class="lys-circle-button" aria-label="More options">More</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="lys-community-card" data-community-card data-intent="romance">
+            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=700&q=85" alt="Sofia" />
+            <div class="lys-community-card-body">
+              <div><h2>Sofia, 40</h2><span>Naples</span></div>
+              <span class="lys-intent-badge lys-intent-badge-romance">Dating</span>
+              <p>Your strongest overlap is travel, faith, and trying new restaurants.</p>
+              <div class="lys-community-actions">
+                <button type="button" class="lys-text-action" data-message-nav>Message</button>
+                <button type="button" class="lys-circle-button" aria-label="More options">More</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lys-app-page lys-messages-page" data-page="messages" hidden>
+        <div class="lys-message-shell">
+          <aside class="lys-conversation-list">
+            <div class="lys-message-heading">
+              <p class="lys-eyebrow">Messages</p>
+              <h1>Conversations</h1>
+            </div>
+
+            <button type="button" class="lys-conversation-row is-active" data-conversation="mia" data-chat-name="Mia" data-chat-intent="Friend connection - Active now" data-chat-avatar="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Mia" />
+              <span class="lys-conversation-copy">
+                <span><strong>Mia</strong><small>10:42 AM</small></span>
+                <span>That sounds perfect. Saturday?</span>
+              </span>
+            </button>
+            <button type="button" class="lys-conversation-row" data-conversation="noah" data-chat-name="Noah" data-chat-intent="Friend connection - Active today" data-chat-avatar="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80">
+              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80" alt="Noah" />
+              <span class="lys-conversation-copy">
+                <span><strong>Noah</strong><small>Yesterday</small></span>
+                <span>I know a great place near the water.</span>
+              </span>
+            </button>
+            <button type="button" class="lys-conversation-row" data-conversation="sofia" data-chat-name="Sofia" data-chat-intent="Dating connection - Active Monday" data-chat-avatar="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80">
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80" alt="Sofia" />
+              <span class="lys-conversation-copy">
+                <span><strong>Sofia</strong><small>Mon</small></span>
+                <span>Haha, I completely agree.</span>
+              </span>
+            </button>
+          </aside>
+
+          <section class="lys-chat-panel">
+            <header class="lys-chat-header">
+              <div>
+                <img data-chat-avatar src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Mia" />
+                <div><strong data-chat-name>Mia</strong><span data-chat-intent>Friend connection - Active now</span></div>
+              </div>
+              <button class="lys-circle-button" type="button" aria-label="Conversation options">More</button>
+            </header>
+
+            <div class="lys-chat-body" data-chat-body>
+              <div class="lys-chat-day">Today</div>
+              <div class="lys-bubble lys-bubble-theirs">Have you tried that little coffee place downtown yet?</div>
+              <div class="lys-bubble lys-bubble-mine">Not yet, but I keep hearing about it. Worth going?</div>
+              <div class="lys-bubble lys-bubble-theirs">Definitely. And they have a patio that is actually quiet enough to talk.</div>
+              <div class="lys-bubble lys-bubble-mine">You had me at quiet patio.</div>
+              <div class="lys-bubble lys-bubble-theirs">That sounds perfect. Saturday?</div>
+            </div>
+
+            <form class="lys-message-composer" data-message-form>
+              <button type="button" class="lys-circle-button" aria-label="Add attachment">Add</button>
+              <input type="text" name="message" placeholder="Write a message..." autocomplete="off" />
+              <button class="lys-button lys-button-small" type="submit">Send</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section class="lys-app-page lys-profile-page" data-page="profile" hidden>
+        <div class="lys-profile-page-grid">
+          <aside class="lys-profile-sidebar">
+            <div class="lys-current-user-photo">
+              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85" alt="Profile placeholder" />
+              <button type="button">Change photo</button>
+            </div>
+            <h1>Brian Cooper</h1>
+            <p>Fort Myers, Florida</p>
+            <div class="lys-completion">
+              <span><strong>82%</strong> profile complete</span>
+              <div><span></span></div>
+            </div>
+          </aside>
+
+          <div class="lys-profile-editor">
+            <div class="lys-editor-section">
+              <div class="lys-section-heading">
+                <div><p class="lys-eyebrow">My profile</p><h2>About me</h2></div>
+                <button type="button" class="lys-text-action">Edit</button>
+              </div>
+              <p class="lys-about-copy">I care about faith, good conversation, building meaningful things, and spending time with people who know how to laugh. I am always up for a great meal or somewhere new to explore.</p>
+            </div>
+
+            <div class="lys-editor-section">
+              <div class="lys-section-heading"><div><p class="lys-eyebrow">Connection intent</p><h2>What I'm open to</h2></div></div>
+              <div class="lys-preference-options">
+                <button type="button" class="is-selected" data-preference-toggle><span>On</span><div><strong>Friendship</strong><small>Meet people to build genuine community with.</small></div></button>
+                <button type="button" class="is-selected" data-preference-toggle><span>On</span><div><strong>Dating</strong><small>Open to a romantic connection if it feels right.</small></div></button>
+              </div>
+            </div>
+
+            <div class="lys-editor-section">
+              <div class="lys-section-heading"><div><p class="lys-eyebrow">Interests</p><h2>The things I enjoy</h2></div><button type="button" class="lys-text-action">Manage</button></div>
+              <div class="lys-interest-row lys-interest-row-large"><span>Faith</span><span>Travel</span><span>Leadership</span><span>Live music</span><span>Restaurants</span><span>Fitness</span><span>Books</span></div>
+            </div>
+
+            <div class="lys-editor-section">
+              <div class="lys-section-heading"><div><p class="lys-eyebrow">Voice intro</p><h2>Say hello in your own voice</h2></div></div>
+              <div class="lys-record-card">
+                <button type="button" class="lys-record-button" data-record-button>Record</button>
+                <div><strong>Add a short voice hello</strong><p>Up to 20 seconds. Give people a little sense of you before the first message.</p></div>
+                <span>Optional</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="lys-mobile-nav" aria-label="Mobile navigation">
+      <button type="button" class="is-active" data-nav="discover"><span>01</span><small>Discover</small></button>
+      <button type="button" data-nav="community"><span>02</span><small>Community</small></button>
+      <button type="button" data-nav="messages"><span>03</span><small>Messages</small></button>
+      <button type="button" data-nav="profile"><span>04</span><small>Profile</small></button>
+    </nav>
+  </section>
+
+  <div class="lys-signup-backdrop" data-signup-modal hidden>
+    <div class="lys-signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+      <button class="lys-modal-close" type="button" data-close-signup aria-label="Close signup">Close</button>
+      <p class="lys-eyebrow">Create your profile</p>
+      <h2 id="signup-title">Start with the basics.</h2>
+      <p class="lys-modal-lede">This is a front-end preview. Nothing entered here is saved yet.</p>
+
+      <form data-signup-form>
+        <div class="lys-form-grid">
+          <label><span>First name</span><input name="first_name" type="text" placeholder="First name" required /></label>
+          <label><span>Last name</span><input name="last_name" type="text" placeholder="Last name" required /></label>
+        </div>
+        <label><span>Email</span><input name="email" type="email" placeholder="you@example.com" required /></label>
+        <div class="lys-form-grid">
+          <label><span>City</span><input name="city" type="text" placeholder="Fort Myers" /></label>
+          <label><span>State</span><input name="state" type="text" placeholder="Florida" /></label>
+        </div>
+
+        <fieldset>
+          <legend>What are you open to?</legend>
+          <div class="lys-signup-options">
+            <label><input type="checkbox" name="intent" value="friendship" checked /><span><strong>Friendship</strong><small>Meet people and build community.</small></span></label>
+            <label><input type="checkbox" name="intent" value="romance" /><span><strong>Dating</strong><small>Open to romantic connection.</small></span></label>
+          </div>
+        </fieldset>
+
+        <button class="lys-button lys-button-full" type="submit">Continue to the community</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="lys-toast" data-toast role="status" aria-live="polite" hidden></div>
+</div>
