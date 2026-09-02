@@ -132,10 +132,11 @@ function initLastYearSingle() {
   }
 
   function renderConversation(row) {
-    const chatBody = root.querySelector("[data-chat-body]")
-    const chatName = root.querySelector("[data-chat-name]")
-    const chatIntent = root.querySelector("[data-chat-intent]")
-    const chatAvatar = root.querySelector("[data-chat-avatar]")
+    const chatPanel = root.querySelector(".lys-chat-panel")
+    const chatBody = chatPanel && chatPanel.querySelector("[data-chat-body]")
+    const chatName = chatPanel && chatPanel.querySelector(".lys-chat-header [data-chat-name]")
+    const chatIntent = chatPanel && chatPanel.querySelector(".lys-chat-header [data-chat-intent]")
+    const chatAvatar = chatPanel && chatPanel.querySelector(".lys-chat-header img[data-chat-avatar]")
     if (!chatBody || !row) return
 
     root.querySelectorAll("[data-conversation]").forEach((conversationRow) => {
@@ -246,7 +247,15 @@ function initLastYearSingle() {
   })
 
   root.querySelectorAll("[data-message-nav]").forEach((button) => {
-    button.addEventListener("click", () => showPage("messages"))
+    button.addEventListener("click", () => {
+      const card = button.closest("[data-community-card]")
+      const heading = card && card.querySelector("h2")
+      const name = heading ? heading.textContent.split(",")[0].trim().toLowerCase() : ""
+      const conversationRow = name ? root.querySelector(`[data-conversation="${name}"]`) : null
+
+      showPage("messages")
+      if (conversationRow) renderConversation(conversationRow)
+    })
   })
 
   root.querySelectorAll("[data-conversation]").forEach((row) => {
