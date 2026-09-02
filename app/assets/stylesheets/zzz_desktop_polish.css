@@ -1,0 +1,31 @@
+/* Desktop-only landing-page polish.
+   Keep the mobile layout unchanged while reducing excess whitespace on wide screens. */
+
+@media (min-width: 1051px) {
+  .lys-hero {
+    width: min(calc(100% - 64px), 1180px);
+    min-height: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(420px, 500px);
+    gap: clamp(34px, 4vw, 54px);
+    padding: 36px 0 64px;
+  }
+
+  .lys-hero-copy {
+    max-width: 610px;
+  }
+
+  .lys-hero-visual {
+    width: 100%;
+    max-width: 500px;
+    margin-left: 0;
+    justify-self: end;
+  }
+
+  .lys-editorial-note-top {
+    left: -48px;
+  }
+
+  .lys-editorial-note-bottom {
+    right: -28px;
+  }
+}
