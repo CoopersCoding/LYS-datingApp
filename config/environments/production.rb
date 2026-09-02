@@ -8,7 +8,7 @@ Rails.application.configure do
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
-  # and those relying on copy on write to perform better.
+  # and those relying on copy on write perform better.
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
@@ -24,8 +24,9 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  # Compress CSS using a preprocessor.
-  # config.assets.css_compressor = :sass
+  # Keep modern CSS intact during production precompile. This older Rails/SassC
+  # stack cannot compress browser-native functions such as min() with calc()/var().
+  config.assets.css_compressor = nil
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
