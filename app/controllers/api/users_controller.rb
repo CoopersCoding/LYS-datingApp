@@ -1,10 +1,8 @@
 class Api::UsersController < ApplicationController
-  before_action :require_user!, only: [:me, :update]
+  before_action :require_user!, only: [:index, :show, :me, :update]
 
   def index
-    users = User.includes(:interests).order(:first_name, :last_name)
-    users = users.where.not(id: current_user.id) if current_user
-
+    users = User.includes(:interests).where.not(id: current_user.id).order(:first_name, :last_name)
     render json: { users: users.map { |user| profile_json(user) } }
   end
 
@@ -40,35 +38,16 @@ class Api::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :first_name,
-      :last_name,
-      :email,
-      :password,
-      :password_confirmation,
-      :birthdate,
-      :city,
-      :state,
-      :gender,
-      :bio,
-      :profile_image_url,
-      :looking_for_friendship,
-      :looking_for_romance,
-      interest_ids: []
+      :first_name, :last_name, :email, :password, :password_confirmation,
+      :birthdate, :city, :state, :gender, :bio, :profile_image_url,
+      :looking_for_friendship, :looking_for_romance, interest_ids: []
     )
   end
 
   def profile_params
     params.require(:user).permit(
-      :first_name,
-      :last_name,
-      :birthdate,
-      :city,
-      :state,
-      :gender,
-      :bio,
-      :profile_image_url,
-      :looking_for_friendship,
-      :looking_for_romance,
+      :first_name, :last_name, :birthdate, :city, :state, :gender, :bio,
+      :profile_image_url, :looking_for_friendship, :looking_for_romance,
       interest_ids: []
     )
   end
@@ -87,7 +66,7 @@ class Api::UsersController < ApplicationController
       profile_image_url: user.profile_image_url,
       looking_for_friendship: user.looking_for_friendship,
       looking_for_romance: user.looking_for_romance,
-      interests: user.interests.map { |interest| { id: interest.id, name: interest.name, category: interest.category } }
+      interests: user.interests.order(:name).map { |interest| { id: interest.id, name: interest.name, category: interest.category } }
     }
   end
 

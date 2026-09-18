@@ -1,16 +1,7 @@
-# This file is auto-generated from the current state of the database. Instead
-# of editing this file, please use the migrations feature of Active Record to
-# incrementally modify your database, and then regenerate this schema definition.
-#
-# This file is the source Rails uses to define your schema when running `bin/rails
-# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
-# be faster and is potentially less error prone than running all of your
-# migrations from scratch. Old migrations may fail to apply correctly if those
-# migrations use external dependencies or application code.
-#
-# It's strongly recommended that you check this file into your version control system.
+# This file is auto-generated from the current state of the database.
+# Check this file into version control so new environments can load the current schema.
 
-ActiveRecord::Schema.define(version: 2026_08_31_152844) do
+ActiveRecord::Schema.define(version: 2026_09_18_190000) do
 
   create_table "connections", force: :cascade do |t|
     t.integer "requester_id"
@@ -19,13 +10,16 @@ ActiveRecord::Schema.define(version: 2026_08_31_152844) do
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["recipient_id"], name: "index_connections_on_recipient_id"
+    t.index ["requester_id", "recipient_id"], name: "index_connections_on_requester_id_and_recipient_id", unique: true
+    t.index ["requester_id"], name: "index_connections_on_requester_id"
   end
 
   create_table "conversations", force: :cascade do |t|
     t.integer "connection_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["connection_id"], name: "index_conversations_on_connection_id"
+    t.index ["connection_id"], name: "index_conversations_on_connection_id", unique: true
   end
 
   create_table "interests", force: :cascade do |t|
@@ -51,6 +45,7 @@ ActiveRecord::Schema.define(version: 2026_08_31_152844) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["interest_id"], name: "index_user_interests_on_interest_id"
+    t.index ["user_id", "interest_id"], name: "index_user_interests_on_user_id_and_interest_id", unique: true
     t.index ["user_id"], name: "index_user_interests_on_user_id"
   end
 
@@ -64,11 +59,12 @@ ActiveRecord::Schema.define(version: 2026_08_31_152844) do
     t.string "state"
     t.string "gender"
     t.text "bio"
-    t.string "profile_image_url"
+    t.text "profile_image_url"
     t.boolean "looking_for_friendship"
     t.boolean "looking_for_romance"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "conversations", "connections"

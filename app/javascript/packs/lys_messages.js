@@ -4,29 +4,28 @@ function initLYSMessages() {
 
   root.dataset.lysMessagesInitialized = "true"
 
+  const conversationList = root.querySelector("[data-conversation-list-body]")
+  const communityGrid = root.querySelector("[data-community-grid]")
+  const chatBody = root.querySelector("[data-chat-body]")
+  const messageForm = root.querySelector("[data-message-form]")
   let conversations = []
   let activeConversationId = null
 
+  function csrfToken() {
+    return document.querySelector("meta[name='csrf-token']")?.content || ""
+  }
+
   async function apiRequest(path, options = {}) {
-    const headers = Object.assign(
-      { "Accept": "application/json" },
-      options.headers || {}
-    )
-
-    if (options.body && !headers["Content-Type"]) {
-      headers["Content-Type"] = "application/json"
-    }
-
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-    if (csrfToken && options.method && options.method.toUpperCase() !== "GET") {
-      headers["X-CSRF-Token"] = csrfToken
+    const headers = Object.assign({ "Accept": "application/json" }, options.headers || {})
+    if (options.body && !headers["Content-Type"]) headers["Content-Type"] = "application/json"
+    if (options.method && options.method.toUpperCase() !== "GET" && csrfToken()) {
+      headers["X-CSRF-Token"] = csrfToken()
     }
 
     const response = await fetch(path, Object.assign({}, options, {
       headers,
       credentials: "same-origin"
     }))
-
     const data = await response.json().catch(() => ({}))
 
     if (!response.ok) {
@@ -37,228 +36,192 @@ function initLYSMessages() {
     return data
   }
 
-  function showMessagesPage() {
-    const welcome = root.querySelector("[data-welcome-screen]")
-    const appShell = root.querySelector("[data-app-shell]")
+  function placeholderAvatar(user) {
+    return user.profile_image_url || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80"
+  }
 
-    if (welcome) welcome.hidden = true
-    if (appShell) appShell.hidden = false
+  function intentLabel(type) {
+    return type === "romantic" ? "Dating" : "Friendship"
+  }
 
-    root.querySelectorAll("[data-page]").forEach((page) => {
-      const active = page.dataset.page === "messages"
-      page.hidden = !active
-      page.classList.toggle("is-active", active)
-    })
+  function renderConversationList() {
+    if (!conversationList) return
 
-    root.querySelectorAll("[data-nav]").forEach((button) => {
-      button.classList.toggle("is-active", button.dataset.nav === "messages")
-    })
+    if (conversations.length === 0) {
+      conversationList.innerHTML = '<p class="lys-empty-state">No conversations yet.</p>'
+      return
+    }
 
-    window.history.replaceState(null, "", "#messages")
+    conversationList.innerHTML = conversations.map((conversation) => {
+      const user = conversation.other_user
+      const active = Number(conversation.id) === Number(activeConversationId) ? " is-active" : ""
+      return `
+        <button type="button" class="lys-conversation-row${active}" data-conversation-id="${conversation.id}">
+          <img src="${placeholderAvatar(user)}" alt="${user.first_name}" />
+          <span class="lys-conversation-copy">
+            <span><strong>${user.first_name}</strong><small>${intentLabel(conversation.connection_type)}</small></span>
+            <span>${conversation.last_message || "Start the conversation."}</span>
+          </span>
+        </button>
+      `
+    }).join("")
+  }
+
+  function renderCommunity() {
+    if (!communityGrid) return
+
+    if (conversations.length === 0) {
+      communityGrid.innerHTML = '<p class="lys-empty-state">Your accepted connections will appear here.</p>'
+      return
+    }
+
+    communityGrid.innerHTML = conversations.map((conversation) => {
+      const user = conversation.other_user
+      const intent = conversation.connection_type === "romantic" ? "romance" : "friendship"
+      const badgeClass = intent === "romance" ? " lys-intent-badge-romance" : ""
+      const location = [user.city, user.state].filter(Boolean).join(", ") || "Location not added"
+
+      return `
+        <article class="lys-community-card" data-community-card data-intent="${intent}">
+          <img src="${placeholderAvatar(user)}" alt="${user.first_name}" />
+          <div class="lys-community-card-body">
+            <div><h2>${user.first_name} ${user.last_name || ""}</h2><span>${location}</span></div>
+            <span class="lys-intent-badge${badgeClass}">${intentLabel(conversation.connection_type)}</span>
+            <p>You are connected. Keep the conversation going when you are ready.</p>
+            <div class="lys-community-actions">
+              <button type="button" class="lys-text-action" data-open-conversation="${conversation.id}">Message</button>
+            </div>
+          </div>
+        </article>
+      `
+    }).join("")
   }
 
   async function loadConversations() {
     const data = await apiRequest("/api/conversations")
     conversations = data.conversations || []
 
-    root.querySelectorAll("[data-conversation]").forEach((row) => {
-      const rowName = (row.getAttribute("data-chat-name") || "").trim().toLowerCase()
-      const conversation = conversations.find((item) => {
-        return (item.other_user?.first_name || "").trim().toLowerCase() === rowName
-      })
+    if (!activeConversationId && conversations.length > 0) {
+      activeConversationId = conversations[0].id
+    }
 
-      if (conversation) {
-        row.dataset.conversationId = String(conversation.id)
-      }
-    })
-
+    renderConversationList()
+    renderCommunity()
     return conversations
   }
 
-  async function renderConversation(row, scrollOnMobile = false) {
-    if (!row) return
+  async function openConversation(id, scrollOnMobile = false) {
+    if (!id) return
+    const data = await apiRequest(`/api/conversations/${id}`)
+    const conversation = data.conversation
+    activeConversationId = conversation.id
 
-    if (!row.dataset.conversationId) {
-      await loadConversations()
+    renderConversationList()
+
+    const user = conversation.other_user
+    const headerName = root.querySelector("[data-chat-name]")
+    const headerIntent = root.querySelector("[data-chat-intent]")
+    const headerAvatar = root.querySelector("img[data-chat-avatar]")
+
+    if (headerName) headerName.textContent = [user.first_name, user.last_name].filter(Boolean).join(" ")
+    if (headerIntent) headerIntent.textContent = `${intentLabel(conversation.connection_type)} connection`
+    if (headerAvatar) {
+      headerAvatar.src = placeholderAvatar(user)
+      headerAvatar.alt = user.first_name
     }
 
-    const conversationId = row.dataset.conversationId
-    if (!conversationId) return
-
-    const panel = root.querySelector(".lys-chat-panel")
-    if (!panel) return
-
-    const header = panel.querySelector(".lys-chat-header")
-    const body = panel.querySelector("[data-chat-body]")
-    const name = header && header.querySelector("[data-chat-name]")
-    const intent = header && header.querySelector("[data-chat-intent]")
-    const avatar = header && header.querySelector("img[data-chat-avatar]")
-
-    if (!body) return
-
-    root.querySelectorAll("[data-conversation]").forEach((candidate) => {
-      candidate.classList.toggle("is-active", candidate === row)
-    })
-
-    const personName = row.getAttribute("data-chat-name") || "Connection"
-    const personIntent = row.getAttribute("data-chat-intent") || "Connection"
-    const personAvatar = row.getAttribute("data-chat-avatar") || ""
-
-    if (name) name.textContent = personName
-    if (intent) intent.textContent = personIntent
-
-    if (avatar && personAvatar) {
-      avatar.src = personAvatar
-      avatar.alt = personName
-    }
-
-    body.innerHTML = '<div class="lys-chat-day">Loading...</div>'
-
-    try {
-      const data = await apiRequest(`/api/conversations/${conversationId}`)
-      const conversation = data.conversation
-      activeConversationId = conversation.id
-
-      body.innerHTML = ""
-
-      const day = document.createElement("div")
-      day.className = "lys-chat-day"
-      day.textContent = "Recent"
-      body.appendChild(day)
+    if (chatBody) {
+      chatBody.innerHTML = '<div class="lys-chat-day">Recent</div>'
 
       ;(conversation.messages || []).forEach((message) => {
         const bubble = document.createElement("div")
         bubble.className = `lys-bubble ${message.mine ? "lys-bubble-mine" : "lys-bubble-theirs"}`
         bubble.textContent = message.body
-        body.appendChild(bubble)
+        chatBody.appendChild(bubble)
       })
 
-      body.scrollTop = body.scrollHeight
+      chatBody.scrollTop = chatBody.scrollHeight
+    }
 
-      if (scrollOnMobile && window.matchMedia("(max-width: 820px)").matches) {
-        window.setTimeout(() => {
-          panel.scrollIntoView({ behavior: "smooth", block: "start" })
-        }, 40)
-      }
-    } catch (_error) {
-      body.innerHTML = '<div class="lys-chat-day">Unable to load this conversation.</div>'
+    if (scrollOnMobile && window.matchMedia("(max-width: 820px)").matches) {
+      root.querySelector(".lys-chat-panel")?.scrollIntoView({ behavior: "smooth", block: "start" })
     }
   }
 
-  async function conversationForCommunityButton(button) {
-    const card = button.closest("[data-community-card]")
-    const heading = card && card.querySelector("h2")
-    if (!heading) return null
+  conversationList?.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-conversation-id]")
+    if (!button) return
+    await openConversation(button.dataset.conversationId, true)
+  })
 
-    const personName = heading.textContent.split(",")[0].trim().toLowerCase()
+  communityGrid?.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-open-conversation]")
+    if (!button) return
+    window.LYS?.showPage("messages")
+    await openConversation(button.dataset.openConversation, true)
+  })
 
-    if (conversations.length === 0) {
+  messageForm?.addEventListener("submit", async (event) => {
+    event.preventDefault()
+
+    const input = messageForm.querySelector("input[name='message']")
+    const sendButton = messageForm.querySelector("button[type='submit']")
+    const body = input?.value.trim() || ""
+
+    if (!body) return
+
+    if (!activeConversationId) {
       await loadConversations()
     }
+    if (!activeConversationId) return
 
-    const conversation = conversations.find((item) => {
-      return (item.other_user?.first_name || "").trim().toLowerCase() === personName
-    })
+    sendButton.disabled = true
+    sendButton.textContent = "Sending..."
 
-    if (!conversation) return null
+    try {
+      await apiRequest(`/api/conversations/${activeConversationId}/messages`, {
+        method: "POST",
+        body: JSON.stringify({ message: { body } })
+      })
 
-    return Array.from(root.querySelectorAll("[data-conversation]")).find((row) => {
-      const rowName = (row.getAttribute("data-chat-name") || "").trim().toLowerCase()
-      return rowName === personName
-    }) || null
-  }
-
-  root.addEventListener("click", async (event) => {
-    const target = event.target
-    if (!(target instanceof Element)) return
-
-    const row = target.closest("[data-conversation]")
-    if (row) {
-      event.preventDefault()
-      await renderConversation(row, true)
-      return
-    }
-
-    const messageButton = target.closest("[data-message-nav]")
-    if (messageButton) {
-      event.preventDefault()
-
-      const rowForPerson = await conversationForCommunityButton(messageButton)
-      showMessagesPage()
-
-      const fallback = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
-      await renderConversation(rowForPerson || fallback, true)
-      return
-    }
-
-    const messagesNav = target.closest('[data-nav="messages"]')
-    if (messagesNav) {
-      window.setTimeout(async () => {
-        const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
-        if (activeRow) await renderConversation(activeRow)
-      }, 0)
+      input.value = ""
+      await loadConversations()
+      await openConversation(activeConversationId)
+    } catch (error) {
+      window.alert(error.message)
+    } finally {
+      sendButton.disabled = false
+      sendButton.textContent = "Send"
     }
   })
 
-  const messageForm = root.querySelector("[data-message-form]")
-  if (messageForm) {
-    messageForm.addEventListener("submit", async (event) => {
-      event.preventDefault()
+  document.addEventListener("lys:pagechange", async (event) => {
+    if (!["community", "messages"].includes(event.detail.pageName)) return
 
-      const input = messageForm.querySelector("input[name='message']")
-      const button = messageForm.querySelector("button[type='submit']")
-      const body = root.querySelector("[data-chat-body]")
-      const text = input?.value.trim() || ""
-
-      if (!text) return
-
-      if (!activeConversationId) {
-        const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
-        if (activeRow) await renderConversation(activeRow)
+    try {
+      await loadConversations()
+      if (event.detail.pageName === "messages" && activeConversationId) {
+        await openConversation(activeConversationId)
       }
-
-      if (!activeConversationId) {
-        window.alert("Please choose a conversation first.")
-        return
-      }
-
-      if (button) {
-        button.disabled = true
-        button.textContent = "Sending..."
-      }
-
-      try {
-        const data = await apiRequest(`/api/conversations/${activeConversationId}/messages`, {
-          method: "POST",
-          body: JSON.stringify({ message: { body: text } })
-        })
-
-        const bubble = document.createElement("div")
-        bubble.className = "lys-bubble lys-bubble-mine"
-        bubble.textContent = data.message.body
-        body?.appendChild(bubble)
-
-        if (input) input.value = ""
-        if (body) body.scrollTop = body.scrollHeight
-      } catch (error) {
-        window.alert(error.message)
-      } finally {
-        if (button) {
-          button.disabled = false
-          button.textContent = "Send"
-        }
-      }
-    })
-  }
-
-  loadConversations().then(() => {
-    const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
-    const messagesPage = root.querySelector('[data-page="messages"]')
-
-    if (activeRow && messagesPage && !messagesPage.hidden) {
-      renderConversation(activeRow)
+    } catch (_error) {
+      if (conversationList) conversationList.innerHTML = '<p class="lys-empty-state">Sign in to view conversations.</p>'
+      if (communityGrid) communityGrid.innerHTML = '<p class="lys-empty-state">Sign in to view your community.</p>'
     }
-  }).catch(() => {})
+  })
+
+  document.addEventListener("lys:authchange", async (event) => {
+    if (!event.detail.signedIn) {
+      conversations = []
+      activeConversationId = null
+      renderConversationList()
+      renderCommunity()
+      return
+    }
+
+    try {
+      await loadConversations()
+    } catch (_error) {}
+  })
 }
 
 document.addEventListener("turbolinks:load", initLYSMessages)

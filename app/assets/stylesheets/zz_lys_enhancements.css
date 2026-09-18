@@ -540,3 +540,53 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.lys-message-composer {
+  grid-template-columns: 1fr auto;
+}
+
+.lys-empty-state {
+  margin: 0;
+  padding: 24px;
+  color: var(--lys-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.lys-interest-picker {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lys-interest-picker legend {
+  margin-bottom: 10px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.lys-interest-picker [data-interest-options] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lys-interest-picker [data-interest-options] label {
+  display: inline-flex;
+  width: auto;
+  min-height: 38px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid var(--lys-border);
+  border-radius: 999px;
+  background: var(--lys-soft);
+  cursor: pointer;
+}
+
+.lys-interest-picker [data-interest-options] input {
+  width: auto;
+  min-height: 0;
+}
