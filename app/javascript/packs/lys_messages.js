@@ -175,8 +175,6 @@ function initLYSMessages() {
     const row = target.closest("[data-conversation]")
     if (row) {
       event.preventDefault()
-      event.stopPropagation()
-      event.stopImmediatePropagation()
       await renderConversation(row, true)
       return
     }
@@ -184,30 +182,45 @@ function initLYSMessages() {
     const messageButton = target.closest("[data-message-nav]")
     if (messageButton) {
       event.preventDefault()
-      event.stopPropagation()
-      event.stopImmediatePropagation()
 
       const rowForPerson = await conversationForCommunityButton(messageButton)
       showMessagesPage()
 
       const fallback = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
       await renderConversation(rowForPerson || fallback, true)
+      return
     }
-  }, true)
+
+    const messagesNav = target.closest('[data-nav="messages"]')
+    if (messagesNav) {
+      window.setTimeout(async () => {
+        const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
+        if (activeRow) await renderConversation(activeRow)
+      }, 0)
+    }
+  })
 
   const messageForm = root.querySelector("[data-message-form]")
   if (messageForm) {
     messageForm.addEventListener("submit", async (event) => {
       event.preventDefault()
-      event.stopPropagation()
-      event.stopImmediatePropagation()
 
       const input = messageForm.querySelector("input[name='message']")
       const button = messageForm.querySelector("button[type='submit']")
       const body = root.querySelector("[data-chat-body]")
       const text = input?.value.trim() || ""
 
-      if (!text || !activeConversationId) return
+      if (!text) return
+
+      if (!activeConversationId) {
+        const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
+        if (activeRow) await renderConversation(activeRow)
+      }
+
+      if (!activeConversationId) {
+        window.alert("Please choose a conversation first.")
+        return
+      }
 
       if (button) {
         button.disabled = true
@@ -227,13 +240,15 @@ function initLYSMessages() {
 
         if (input) input.value = ""
         if (body) body.scrollTop = body.scrollHeight
+      } catch (error) {
+        window.alert(error.message)
       } finally {
         if (button) {
           button.disabled = false
           button.textContent = "Send"
         }
       }
-    }, true)
+    })
   }
 
   loadConversations().then(() => {

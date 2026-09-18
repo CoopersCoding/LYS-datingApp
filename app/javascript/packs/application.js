@@ -29,28 +29,6 @@ function initLastYearSingle() {
   const toast = root.querySelector("[data-toast]")
   let toastTimer
 
-  const conversations = {
-    mia: [
-      ["theirs", "Have you tried that little coffee place downtown yet?"],
-      ["mine", "Not yet, but I keep hearing about it. Worth going?"],
-      ["theirs", "Definitely. And they have a patio that is actually quiet enough to talk."],
-      ["mine", "You had me at quiet patio."],
-      ["theirs", "That sounds perfect. Saturday?"]
-    ],
-    noah: [
-      ["theirs", "You mentioned you like being near the water."],
-      ["mine", "Absolutely. It is one of my favorite ways to reset."],
-      ["theirs", "I know a great place near the water. Good food too."],
-      ["mine", "Now you are speaking my language."]
-    ],
-    sofia: [
-      ["theirs", "I think travel tells you a lot about a person."],
-      ["mine", "Agreed. Especially how they handle the parts that do not go according to plan."],
-      ["theirs", "Haha, I completely agree."],
-      ["mine", "That may be the real compatibility test."]
-    ]
-  }
-
   function showToast(message) {
     if (!toast) return
 
@@ -131,43 +109,6 @@ function initLastYearSingle() {
     }
   }
 
-  function renderConversation(row) {
-    const chatPanel = root.querySelector(".lys-chat-panel")
-    const chatBody = chatPanel && chatPanel.querySelector("[data-chat-body]")
-    const chatName = chatPanel && chatPanel.querySelector(".lys-chat-header [data-chat-name]")
-    const chatIntent = chatPanel && chatPanel.querySelector(".lys-chat-header [data-chat-intent]")
-    const chatAvatar = chatPanel && chatPanel.querySelector(".lys-chat-header img[data-chat-avatar]")
-    if (!chatBody || !row) return
-
-    root.querySelectorAll("[data-conversation]").forEach((conversationRow) => {
-      conversationRow.classList.toggle("is-active", conversationRow === row)
-    })
-
-    if (chatName) chatName.textContent = row.dataset.chatName || "Connection"
-    if (chatIntent) chatIntent.textContent = row.dataset.chatIntent || "Connection"
-    if (chatAvatar && row.dataset.chatAvatar) {
-      chatAvatar.src = row.dataset.chatAvatar
-      chatAvatar.alt = row.dataset.chatName || "Connection"
-    }
-
-    chatBody.innerHTML = ""
-
-    const day = document.createElement("div")
-    day.className = "lys-chat-day"
-    day.textContent = "Recent"
-    chatBody.appendChild(day)
-
-    const messages = conversations[row.dataset.conversation] || []
-    messages.forEach(([direction, text]) => {
-      const bubble = document.createElement("div")
-      bubble.className = `lys-bubble ${direction === "mine" ? "lys-bubble-mine" : "lys-bubble-theirs"}`
-      bubble.textContent = text
-      chatBody.appendChild(bubble)
-    })
-
-    chatBody.scrollTop = chatBody.scrollHeight
-  }
-
   root.querySelectorAll("[data-enter-app]").forEach((button) => {
     button.addEventListener("click", () => showPage(button.dataset.enterApp || "discover"))
   })
@@ -246,41 +187,6 @@ function initLastYearSingle() {
     })
   })
 
-  root.querySelectorAll("[data-message-nav]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const card = button.closest("[data-community-card]")
-      const heading = card && card.querySelector("h2")
-      const name = heading ? heading.textContent.split(",")[0].trim().toLowerCase() : ""
-      const conversationRow = name ? root.querySelector(`[data-conversation="${name}"]`) : null
-
-      showPage("messages")
-      if (conversationRow) renderConversation(conversationRow)
-    })
-  })
-
-  root.querySelectorAll("[data-conversation]").forEach((row) => {
-    row.addEventListener("click", () => renderConversation(row))
-  })
-
-  const messageForm = root.querySelector("[data-message-form]")
-  if (messageForm) {
-    messageForm.addEventListener("submit", (event) => {
-      event.preventDefault()
-      const input = messageForm.querySelector("input[name='message']")
-      const chatBody = root.querySelector("[data-chat-body]")
-      if (!input || !chatBody) return
-
-      const message = input.value.trim()
-      if (!message) return
-
-      const bubble = document.createElement("div")
-      bubble.className = "lys-bubble lys-bubble-mine"
-      bubble.textContent = message
-      chatBody.appendChild(bubble)
-      input.value = ""
-      chatBody.scrollTop = chatBody.scrollHeight
-    })
-  }
 
   root.querySelectorAll("[data-preference-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
