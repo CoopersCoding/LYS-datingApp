@@ -2,6 +2,7 @@ class Api::ConversationsController < ApplicationController
   before_action :require_user!
 
   def index
+    ensure_demo_conversations!
     conversations = accessible_conversations.includes(:messages)
 
     render json: {
@@ -15,6 +16,45 @@ class Api::ConversationsController < ApplicationController
   end
 
   private
+
+  def ensure_demo_conversations!
+    demo_emails = [
+      "mia@lastyearsingle.test",
+      "noah@lastyearsingle.test",
+      "sofia@lastyearsingle.test"
+    ]
+
+    User.where(email: demo_emails).find_each do |demo_user|
+      next if demo_user.id == current_user.id
+
+      existing = Connection.find_by(requester: current_user, recipient: demo_user) ||
+                 Connection.find_by(requester: demo_user, recipient: current_user)
+
+      connection = existing || Connection.new(
+        requester: current_user,
+        recipient: demo_user,
+        connection_type: demo_user.email.start_with?("sofia@") ? "romantic" : "friendship"
+      )
+
+      connection.status = "accepted"
+      connection.save!
+
+      conversation = Conversation.find_or_create_by!(connection: connection)
+
+      next unless conversation.messages.empty?
+
+      starter = case demo_user.first_name
+                when "Mia"
+                  "Have you tried that little coffee place downtown yet?"
+                when "Noah"
+                  "You mentioned you like being near the water."
+                else
+                  "I think travel tells you a lot about a person."
+                end
+
+      conversation.messages.create!(user: demo_user, body: starter)
+    end
+  end
 
   def accessible_conversations
     Conversation
