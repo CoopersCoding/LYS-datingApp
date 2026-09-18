@@ -143,6 +143,36 @@ function initLYSEnhancements() {
     }, 260)
   }
 
+  async function apiRequest(path, options = {}) {
+    const headers = Object.assign(
+      { "Accept": "application/json" },
+      options.headers || {}
+    )
+
+    if (options.body && !headers["Content-Type"]) {
+      headers["Content-Type"] = "application/json"
+    }
+
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
+    if (csrfToken && options.method && options.method.toUpperCase() !== "GET") {
+      headers["X-CSRF-Token"] = csrfToken
+    }
+
+    const response = await fetch(path, Object.assign({}, options, {
+      headers,
+      credentials: "same-origin"
+    }))
+
+    const data = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      const message = data.error || (data.errors && data.errors.join(", ")) || "Something went wrong."
+      throw new Error(message)
+    }
+
+    return data
+  }
+
   function enterApp(name, gender) {
     const resolvedName = name || "Brian"
     const resolvedGender = gender === "woman" ? "woman" : "man"
@@ -469,20 +499,78 @@ function initLYSEnhancements() {
     if (event.target === archiveScreen) closeArchive()
   })
 
-  root.querySelector("[data-signin-preview]")?.addEventListener("submit", (event) => {
-    event.preventDefault()
-    const storedName = window.sessionStorage.getItem("lysCurrentName") || "Brian"
-    const storedGender = window.sessionStorage.getItem("lysCurrentGender") || "man"
-    enterApp(storedName, storedGender)
-  })
-
-  root.querySelector("[data-signup-preview]")?.addEventListener("submit", (event) => {
+  root.querySelector("[data-signin-preview]")?.addEventListener("submit", async (event) => {
     event.preventDefault()
     const form = event.currentTarget
-    const firstName = form.querySelector("[name='first_name']")?.value.trim() || "Member"
+    const button = form.querySelector("button[type='submit']")
+    const email = form.querySelector("[name='email']")?.value.trim() || ""
+    const password = form.querySelector("[name='password']")?.value || ""
+
+    if (button) {
+      button.disabled = true
+      button.textContent = "Signing in..."
+    }
+
+    try {
+      const data = await apiRequest("/api/session", {
+        method: "POST",
+        body: JSON.stringify({ email, password })
+      })
+
+      enterApp(data.user.first_name, data.user.gender)
+      showToast(`Welcome back, ${data.user.first_name}.`)
+    } catch (error) {
+      showToast(error.message)
+    } finally {
+      if (button) {
+        button.disabled = false
+        button.textContent = "Sign in"
+      }
+    }
+  })
+
+  root.querySelector("[data-signup-preview]")?.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    const button = form.querySelector("button[type='submit']")
+    const firstName = form.querySelector("[name='first_name']")?.value.trim() || ""
+    const lastName = form.querySelector("[name='last_name']")?.value.trim() || ""
+    const email = form.querySelector("[name='email']")?.value.trim() || ""
+    const password = form.querySelector("[name='password']")?.value || ""
     const gender = form.querySelector("[name='gender']")?.value || "man"
-    enterApp(firstName, gender)
-    showToast(`Welcome, ${firstName}. Your profile is ready.`)
+
+    if (button) {
+      button.disabled = true
+      button.textContent = "Creating account..."
+    }
+
+    try {
+      const data = await apiRequest("/api/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          user: {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password,
+            password_confirmation: password,
+            gender,
+            looking_for_friendship: true,
+            looking_for_romance: true
+          }
+        })
+      })
+
+      enterApp(data.user.first_name, data.user.gender)
+      showToast(`Welcome, ${data.user.first_name}. Your account is ready.`)
+    } catch (error) {
+      showToast(error.message)
+    } finally {
+      if (button) {
+        button.disabled = false
+        button.textContent = "Create account"
+      }
+    }
   })
 
   root.querySelector("[data-detail-audio]")?.addEventListener("click", (event) => {
