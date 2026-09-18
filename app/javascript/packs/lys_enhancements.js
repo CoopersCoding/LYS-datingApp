@@ -508,14 +508,9 @@ function initLYSEnhancements() {
   async function signOut() {
     try {
       await apiRequest("/api/session", { method: "DELETE" })
-    } finally {
-      currentProfile = null
-      connectedNames = new Set()
-      if (appShell) appShell.hidden = true
-      if (welcome) welcome.hidden = false
-      window.history.replaceState(null, "", window.location.pathname)
-      document.dispatchEvent(new CustomEvent("lys:authchange", { detail: { signedIn: false } }))
-      showToast("Signed out.")
+      window.location.assign("/")
+    } catch (error) {
+      showToast(error.message)
     }
   }
 
