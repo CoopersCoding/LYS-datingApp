@@ -495,6 +495,10 @@ function initLYSEnhancements() {
 
   async function enterApp(user) {
     renderCurrentProfile(user)
+
+    const fullUser = await loadCurrentProfile()
+    if (fullUser) renderCurrentProfile(fullUser)
+
     await loadDiscoverState()
     closeAuth()
 
