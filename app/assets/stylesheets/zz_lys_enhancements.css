@@ -170,7 +170,8 @@
 
 .lys-auth-screen,
 .lys-profile-detail-screen,
-.lys-archive-screen {
+.lys-archive-screen,
+.lys-profile-edit-screen {
   position: fixed;
   z-index: 200;
   inset: 0;
@@ -290,7 +291,8 @@
 }
 
 .lys-auth-card input,
-.lys-auth-card select {
+.lys-auth-card select,
+.lys-auth-card textarea {
   width: 100%;
   min-height: 48px;
   padding: 0 14px;
@@ -304,7 +306,8 @@
 }
 
 .lys-auth-card input:focus,
-.lys-auth-card select:focus {
+.lys-auth-card select:focus,
+.lys-auth-card textarea:focus {
   border-color: #aebaa6;
   background: var(--lys-white);
 }
@@ -473,5 +476,67 @@
 
   .lys-swipe-hint {
     display: none;
+  }
+}
+
+
+.lys-auth-card textarea {
+  padding: 14px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.lys-profile-edit-card {
+  max-width: 700px;
+}
+
+.lys-profile-edit-card label small {
+  color: var(--lys-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.lys-profile-edit-intents {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.lys-profile-edit-intents label {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid var(--lys-border);
+  border-radius: 12px;
+  background: var(--lys-soft);
+}
+
+.lys-profile-edit-intents input {
+  width: auto;
+  min-height: 0;
+}
+
+.lys-profile-edit-intents span {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .lys-profile-edit-screen {
+    align-items: end;
+    padding: 0;
+  }
+
+  .lys-profile-edit-card {
+    max-height: 94vh;
+    overflow-y: auto;
+    padding: 36px 22px 28px;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .lys-profile-edit-intents {
+    grid-template-columns: 1fr;
   }
 }

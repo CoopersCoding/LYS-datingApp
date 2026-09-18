@@ -389,11 +389,11 @@
         <div class="lys-profile-page-grid">
           <aside class="lys-profile-sidebar">
             <div class="lys-current-user-photo">
-              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85" alt="Profile placeholder" />
-              <button type="button">Change photo</button>
+              <img data-current-profile-photo src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85" alt="Current profile" />
+              <button type="button" data-edit-profile-photo>Change photo</button>
             </div>
-            <h1>Brian Cooper</h1>
-            <p>Fort Myers, Florida</p>
+            <h1 data-current-profile-name>Brian Cooper</h1>
+            <p data-current-profile-location>Fort Myers, Florida</p>
             <div class="lys-completion">
               <span><strong>82%</strong> profile complete</span>
               <div><span></span></div>
@@ -404,9 +404,9 @@
             <div class="lys-editor-section">
               <div class="lys-section-heading">
                 <div><p class="lys-eyebrow">My profile</p><h2>About me</h2></div>
-                <button type="button" class="lys-text-action">Edit</button>
+                <button type="button" class="lys-text-action" data-edit-profile>Edit</button>
               </div>
-              <p class="lys-about-copy">I care about faith, good conversation, building meaningful things, and spending time with people who know how to laugh. I am always up for a great meal or somewhere new to explore.</p>
+              <p class="lys-about-copy" data-current-profile-bio>I care about faith, good conversation, building meaningful things, and spending time with people who know how to laugh. I am always up for a great meal or somewhere new to explore.</p>
             </div>
 
             <div class="lys-editor-section">
@@ -418,7 +418,7 @@
             </div>
 
             <div class="lys-editor-section">
-              <div class="lys-section-heading"><div><p class="lys-eyebrow">Interests</p><h2>The things I enjoy</h2></div><button type="button" class="lys-text-action">Manage</button></div>
+              <div class="lys-section-heading"><div><p class="lys-eyebrow">Interests</p><h2>The things I enjoy</h2></div><button type="button" class="lys-text-action" data-edit-profile>Manage profile</button></div>
               <div class="lys-interest-row lys-interest-row-large"><span>Faith</span><span>Travel</span><span>Leadership</span><span>Live music</span><span>Restaurants</span><span>Fitness</span><span>Books</span></div>
             </div>
 

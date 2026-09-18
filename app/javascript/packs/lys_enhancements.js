@@ -173,6 +173,81 @@ function initLYSEnhancements() {
     return data
   }
 
+  let currentProfile = null
+
+  function renderCurrentProfile(user) {
+    if (!user) return
+    currentProfile = user
+
+    const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ")
+    const location = [user.city, user.state].filter(Boolean).join(", ")
+
+    const nameEl = root.querySelector("[data-current-profile-name]")
+    const locationEl = root.querySelector("[data-current-profile-location]")
+    const bioEl = root.querySelector("[data-current-profile-bio]")
+    const photoEl = root.querySelector("[data-current-profile-photo]")
+    const chipName = root.querySelector(".lys-profile-chip-copy strong")
+    const chipInitials = root.querySelector(".lys-profile-chip > span:first-child")
+
+    if (nameEl) nameEl.textContent = fullName || user.first_name || "Member"
+    if (locationEl) locationEl.textContent = location || "Location not added"
+    if (bioEl) bioEl.textContent = user.bio || "Add a few words about yourself so people know what matters to you."
+    if (photoEl && user.profile_image_url) photoEl.src = user.profile_image_url
+    if (chipName) chipName.textContent = user.first_name || "Member"
+    if (chipInitials) {
+      const initials = [user.first_name, user.last_name].filter(Boolean).map((part) => part[0]).join("").slice(0, 2)
+      chipInitials.textContent = initials.toUpperCase() || "LY"
+    }
+
+    root.dataset.currentGender = user.gender || root.dataset.currentGender || "man"
+  }
+
+  async function loadCurrentProfile() {
+    try {
+      const data = await apiRequest("/api/me")
+      renderCurrentProfile(data.user)
+      return data.user
+    } catch (_error) {
+      return null
+    }
+  }
+
+  function openProfileEditor(focusPhoto = false) {
+    if (!profileEditScreen) return
+
+    const fill = (user) => {
+      if (!user) return
+      const form = profileEditScreen.querySelector("[data-profile-edit-form]")
+      if (!form) return
+
+      form.elements.first_name.value = user.first_name || ""
+      form.elements.last_name.value = user.last_name || ""
+      form.elements.city.value = user.city || ""
+      form.elements.state.value = user.state || ""
+      form.elements.bio.value = user.bio || ""
+      form.elements.profile_image_url.value = user.profile_image_url || ""
+      form.elements.looking_for_friendship.checked = Boolean(user.looking_for_friendship)
+      form.elements.looking_for_romance.checked = Boolean(user.looking_for_romance)
+
+      profileEditScreen.hidden = false
+      document.body.classList.add("lys-modal-open")
+
+      window.setTimeout(() => {
+        const target = focusPhoto ? form.elements.profile_image_url : form.elements.bio
+        target?.focus()
+      }, 60)
+    }
+
+    if (currentProfile) fill(currentProfile)
+    else loadCurrentProfile().then(fill)
+  }
+
+  function closeProfileEditor() {
+    if (!profileEditScreen) return
+    profileEditScreen.hidden = true
+    document.body.classList.remove("lys-modal-open")
+  }
+
   function enterApp(name, gender) {
     const resolvedName = name || "Brian"
     const resolvedGender = gender === "woman" ? "woman" : "man"
@@ -202,6 +277,7 @@ function initLYSEnhancements() {
     window.history.replaceState(null, "", "#discover")
     applyPoolFilter("friendship")
     closeAuth()
+    loadCurrentProfile()
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
@@ -288,9 +364,41 @@ function initLYSEnhancements() {
     </div>
   `)
 
+  root.insertAdjacentHTML("beforeend", `
+    <div class="lys-profile-edit-screen" data-profile-edit-screen hidden>
+      <div class="lys-auth-card lys-profile-edit-card" role="dialog" aria-modal="true" aria-labelledby="lys-profile-edit-title">
+        <button class="lys-auth-close" type="button" data-profile-edit-close>Close</button>
+        <p class="lys-eyebrow">My profile</p>
+        <h2 id="lys-profile-edit-title">Edit your profile.</h2>
+        <form data-profile-edit-form>
+          <div class="lys-auth-name-grid">
+            <label><span>First name</span><input type="text" name="first_name" required /></label>
+            <label><span>Last name</span><input type="text" name="last_name" required /></label>
+          </div>
+          <div class="lys-auth-name-grid">
+            <label><span>City</span><input type="text" name="city" /></label>
+            <label><span>State</span><input type="text" name="state" /></label>
+          </div>
+          <label><span>About me</span><textarea name="bio" rows="5" placeholder="Tell people a little about yourself."></textarea></label>
+          <label>
+            <span>Profile photo URL</span>
+            <input type="url" name="profile_image_url" placeholder="https://..." />
+            <small>For this course build, paste a direct image URL and it will be saved to your profile.</small>
+          </label>
+          <div class="lys-profile-edit-intents">
+            <label><input type="checkbox" name="looking_for_friendship" /><span>Open to friendship</span></label>
+            <label><input type="checkbox" name="looking_for_romance" /><span>Open to dating</span></label>
+          </div>
+          <button class="lys-button lys-button-full" type="submit">Save profile</button>
+        </form>
+      </div>
+    </div>
+  `)
+
   const authScreen = root.querySelector("[data-auth-screen]")
   const detailScreen = root.querySelector("[data-profile-detail-screen]")
   const archiveScreen = root.querySelector("[data-archive-screen]")
+  const profileEditScreen = root.querySelector("[data-profile-edit-screen]")
 
   const topMemberButton = root.querySelector(".lys-welcome [data-enter-app]")
   if (topMemberButton) topMemberButton.textContent = "Sign in"
@@ -488,6 +596,11 @@ function initLYSEnhancements() {
   root.querySelector("[data-profile-detail-close]")?.addEventListener("click", closeProfileDetail)
   root.querySelector("[data-archive-close]")?.addEventListener("click", closeArchive)
   root.querySelector("[data-open-archive]")?.addEventListener("click", openArchive)
+  root.querySelectorAll("[data-edit-profile]").forEach((button) => {
+    button.addEventListener("click", () => openProfileEditor(false))
+  })
+  root.querySelector("[data-edit-profile-photo]")?.addEventListener("click", () => openProfileEditor(true))
+  root.querySelector("[data-profile-edit-close]")?.addEventListener("click", closeProfileEditor)
 
   authScreen?.addEventListener("click", (event) => {
     if (event.target === authScreen) closeAuth()
@@ -497,6 +610,57 @@ function initLYSEnhancements() {
   })
   archiveScreen?.addEventListener("click", (event) => {
     if (event.target === archiveScreen) closeArchive()
+  })
+  profileEditScreen?.addEventListener("click", (event) => {
+    if (event.target === profileEditScreen) closeProfileEditor()
+  })
+
+  root.querySelector("[data-profile-edit-form]")?.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    const button = form.querySelector("button[type='submit']")
+
+    if (!currentProfile) {
+      currentProfile = await loadCurrentProfile()
+    }
+    if (!currentProfile) {
+      showToast("Please sign in again before editing your profile.")
+      return
+    }
+
+    if (button) {
+      button.disabled = true
+      button.textContent = "Saving..."
+    }
+
+    try {
+      const data = await apiRequest(`/api/users/${currentProfile.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          user: {
+            first_name: form.elements.first_name.value.trim(),
+            last_name: form.elements.last_name.value.trim(),
+            city: form.elements.city.value.trim(),
+            state: form.elements.state.value.trim(),
+            bio: form.elements.bio.value.trim(),
+            profile_image_url: form.elements.profile_image_url.value.trim(),
+            looking_for_friendship: form.elements.looking_for_friendship.checked,
+            looking_for_romance: form.elements.looking_for_romance.checked
+          }
+        })
+      })
+
+      renderCurrentProfile(data.user)
+      closeProfileEditor()
+      showToast("Profile saved.")
+    } catch (error) {
+      showToast(error.message)
+    } finally {
+      if (button) {
+        button.disabled = false
+        button.textContent = "Save profile"
+      }
+    }
   })
 
   root.querySelector("[data-signin-preview]")?.addEventListener("submit", async (event) => {
@@ -660,6 +824,7 @@ function initLYSEnhancements() {
     if (authScreen && !authScreen.hidden) closeAuth()
     if (detailScreen && !detailScreen.hidden) closeProfileDetail()
     if (archiveScreen && !archiveScreen.hidden) closeArchive()
+    if (profileEditScreen && !profileEditScreen.hidden) closeProfileEditor()
   })
 
   const signedIn = window.sessionStorage.getItem("lysPrototypeSignedIn") === "true"
@@ -670,6 +835,7 @@ function initLYSEnhancements() {
   } else {
     root.dataset.currentGender = window.sessionStorage.getItem("lysCurrentGender") || "man"
     applyPoolFilter(activePool)
+    loadCurrentProfile()
   }
 
   updateArchiveCount()
