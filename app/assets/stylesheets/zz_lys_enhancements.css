@@ -590,3 +590,8 @@
   width: auto;
   min-height: 0;
 }
+
+
+.lys-toast {
+  z-index: 300;
+}

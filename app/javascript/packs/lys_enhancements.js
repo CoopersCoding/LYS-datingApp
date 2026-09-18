@@ -53,6 +53,68 @@ function initLYSEnhancements() {
     return data
   }
 
+  function imageFileToProfileDataUrl(file) {
+    if (!file.type.startsWith("image/")) {
+      return Promise.reject(new Error("Please choose an image file."))
+    }
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+
+      reader.onerror = () => reject(new Error("Unable to read that image."))
+
+      reader.onload = () => {
+        const originalDataUrl = reader.result
+
+        if (file.type === "image/gif" || file.type === "image/svg+xml") {
+          if (file.size > 2 * 1024 * 1024) {
+            reject(new Error("Please choose a JPG, PNG, or WebP photo for large images."))
+          } else {
+            resolve(originalDataUrl)
+          }
+          return
+        }
+
+        const image = new Image()
+
+        image.onerror = () => reject(new Error("Unable to process that image."))
+
+        image.onload = () => {
+          const maxDimension = 1200
+          const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight))
+          const width = Math.max(1, Math.round(image.naturalWidth * scale))
+          const height = Math.max(1, Math.round(image.naturalHeight * scale))
+
+          const canvas = document.createElement("canvas")
+          canvas.width = width
+          canvas.height = height
+
+          const context = canvas.getContext("2d")
+          if (!context) {
+            reject(new Error("Unable to process that image."))
+            return
+          }
+
+          context.drawImage(image, 0, 0, width, height)
+
+          let quality = 0.82
+          let dataUrl = canvas.toDataURL("image/jpeg", quality)
+
+          while (dataUrl.length > 1_500_000 && quality > 0.5) {
+            quality -= 0.08
+            dataUrl = canvas.toDataURL("image/jpeg", quality)
+          }
+
+          resolve(dataUrl)
+        }
+
+        image.src = originalDataUrl
+      }
+
+      reader.readAsDataURL(file)
+    })
+  }
+
   function showToast(message) {
     if (!toast) return
     window.clearTimeout(toastTimer)
@@ -154,7 +216,7 @@ function initLYSEnhancements() {
           <label>
             <span>Profile photo</span>
             <input type="file" name="profile_image_file" accept="image/*" />
-            <small>Choose an image from your computer, up to 2 MB.</small>
+            <small>Choose a photo from your device. Large photos are resized automatically.</small>
           </label>
           <div class="lys-profile-edit-intents">
             <label><input type="checkbox" name="looking_for_friendship" /><span>Open to friendship</span></label>
@@ -681,15 +743,7 @@ function initLYSEnhancements() {
       const imageFile = form.elements.profile_image_file.files[0]
 
       if (imageFile) {
-        if (!imageFile.type.startsWith("image/")) throw new Error("Please choose an image file.")
-        if (imageFile.size > 2 * 1024 * 1024) throw new Error("Please choose an image smaller than 2 MB.")
-
-        profileImage = await new Promise((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onload = () => resolve(reader.result)
-          reader.onerror = () => reject(new Error("Unable to read that image."))
-          reader.readAsDataURL(imageFile)
-        })
+        profileImage = await imageFileToProfileDataUrl(imageFile)
       }
 
       const interestIds = Array.from(form.querySelectorAll('input[name="interest_ids"]:checked')).map((input) => input.value)
