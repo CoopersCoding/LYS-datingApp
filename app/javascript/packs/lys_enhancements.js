@@ -400,8 +400,6 @@ function initLYSEnhancements() {
   async function openProfileEditor(openFilePicker = false) {
     if (!currentProfile) return
 
-    await loadInterests()
-
     const form = profileEditScreen.querySelector("[data-profile-edit-form]")
     form.elements.first_name.value = currentProfile.first_name || ""
     form.elements.last_name.value = currentProfile.last_name || ""
@@ -412,12 +410,17 @@ function initLYSEnhancements() {
     form.elements.looking_for_friendship.checked = Boolean(currentProfile.looking_for_friendship)
     form.elements.looking_for_romance.checked = Boolean(currentProfile.looking_for_romance)
 
-    renderInterestOptions(currentProfile)
     profileEditScreen.hidden = false
     document.body.classList.add("lys-modal-open")
 
-    if (openFilePicker) form.elements.profile_image_file.click()
-    else form.elements.bio.focus()
+    if (openFilePicker) {
+      form.elements.profile_image_file.click()
+    } else {
+      form.elements.bio.focus()
+    }
+
+    await loadInterests()
+    renderInterestOptions(currentProfile)
   }
 
   function closeProfileEditor() {
