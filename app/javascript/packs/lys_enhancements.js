@@ -225,7 +225,7 @@ function initLYSEnhancements() {
       form.elements.city.value = user.city || ""
       form.elements.state.value = user.state || ""
       form.elements.bio.value = user.bio || ""
-      form.elements.profile_image_url.value = user.profile_image_url || ""
+      form.elements.profile_image_file.value = ""
       form.elements.looking_for_friendship.checked = Boolean(user.looking_for_friendship)
       form.elements.looking_for_romance.checked = Boolean(user.looking_for_romance)
 
@@ -233,8 +233,9 @@ function initLYSEnhancements() {
       document.body.classList.add("lys-modal-open")
 
       window.setTimeout(() => {
-        const target = focusPhoto ? form.elements.profile_image_url : form.elements.bio
+        const target = focusPhoto ? form.elements.profile_image_file : form.elements.bio
         target?.focus()
+        if (focusPhoto) target?.click()
       }, 60)
     }
 
@@ -381,9 +382,9 @@ function initLYSEnhancements() {
           </div>
           <label><span>About me</span><textarea name="bio" rows="5" placeholder="Tell people a little about yourself."></textarea></label>
           <label>
-            <span>Profile photo URL</span>
-            <input type="url" name="profile_image_url" placeholder="https://..." />
-            <small>For this course build, paste a direct image URL and it will be saved to your profile.</small>
+            <span>Profile photo</span>
+            <input type="file" name="profile_image_file" accept="image/*" />
+            <small>Choose an image from your computer. JPG, PNG, GIF, or WebP up to 2 MB.</small>
           </label>
           <div class="lys-profile-edit-intents">
             <label><input type="checkbox" name="looking_for_friendship" /><span>Open to friendship</span></label>
@@ -634,6 +635,26 @@ function initLYSEnhancements() {
     }
 
     try {
+      let profileImage = currentProfile.profile_image_url || ""
+      const imageFile = form.elements.profile_image_file.files[0]
+
+      if (imageFile) {
+        if (!imageFile.type.startsWith("image/")) {
+          throw new Error("Please choose an image file.")
+        }
+
+        if (imageFile.size > 2 * 1024 * 1024) {
+          throw new Error("Please choose an image smaller than 2 MB.")
+        }
+
+        profileImage = await new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(reader.result)
+          reader.onerror = () => reject(new Error("Unable to read that image."))
+          reader.readAsDataURL(imageFile)
+        })
+      }
+
       const data = await apiRequest(`/api/users/${currentProfile.id}`, {
         method: "PATCH",
         body: JSON.stringify({
@@ -643,7 +664,7 @@ function initLYSEnhancements() {
             city: form.elements.city.value.trim(),
             state: form.elements.state.value.trim(),
             bio: form.elements.bio.value.trim(),
-            profile_image_url: form.elements.profile_image_url.value.trim(),
+            profile_image_url: profileImage,
             looking_for_friendship: form.elements.looking_for_friendship.checked,
             looking_for_romance: form.elements.looking_for_romance.checked
           }

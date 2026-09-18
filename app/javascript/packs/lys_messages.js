@@ -4,26 +4,37 @@ function initLYSMessages() {
 
   root.dataset.lysMessagesInitialized = "true"
 
-  const conversations = {
-    mia: [
-      ["theirs", "Have you tried that little coffee place downtown yet?"],
-      ["mine", "Not yet, but I keep hearing about it. Worth going?"],
-      ["theirs", "Definitely. And they have a patio that is actually quiet enough to talk."],
-      ["mine", "You had me at quiet patio."],
-      ["theirs", "That sounds perfect. Saturday?"]
-    ],
-    noah: [
-      ["theirs", "You mentioned you like being near the water."],
-      ["mine", "Absolutely. It is one of my favorite ways to reset."],
-      ["theirs", "I know a great place near the water. Good food too."],
-      ["mine", "Now you are speaking my language."]
-    ],
-    sofia: [
-      ["theirs", "I think travel tells you a lot about a person."],
-      ["mine", "Agreed. Especially how they handle the parts that do not go according to plan."],
-      ["theirs", "Haha, I completely agree."],
-      ["mine", "That may be the real compatibility test."]
-    ]
+  let conversations = []
+  let activeConversationId = null
+
+  async function apiRequest(path, options = {}) {
+    const headers = Object.assign(
+      { "Accept": "application/json" },
+      options.headers || {}
+    )
+
+    if (options.body && !headers["Content-Type"]) {
+      headers["Content-Type"] = "application/json"
+    }
+
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
+    if (csrfToken && options.method && options.method.toUpperCase() !== "GET") {
+      headers["X-CSRF-Token"] = csrfToken
+    }
+
+    const response = await fetch(path, Object.assign({}, options, {
+      headers,
+      credentials: "same-origin"
+    }))
+
+    const data = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      const message = data.error || (data.errors && data.errors.join(", ")) || "Something went wrong."
+      throw new Error(message)
+    }
+
+    return data
   }
 
   function showMessagesPage() {
@@ -46,8 +57,33 @@ function initLYSMessages() {
     window.history.replaceState(null, "", "#messages")
   }
 
-  function renderConversation(row, scrollOnMobile = false) {
+  async function loadConversations() {
+    const data = await apiRequest("/api/conversations")
+    conversations = data.conversations || []
+
+    root.querySelectorAll("[data-conversation]").forEach((row) => {
+      const rowName = (row.getAttribute("data-chat-name") || "").trim().toLowerCase()
+      const conversation = conversations.find((item) => {
+        return (item.other_user?.first_name || "").trim().toLowerCase() === rowName
+      })
+
+      if (conversation) {
+        row.dataset.conversationId = String(conversation.id)
+      }
+    })
+
+    return conversations
+  }
+
+  async function renderConversation(row, scrollOnMobile = false) {
     if (!row) return
+
+    if (!row.dataset.conversationId) {
+      await loadConversations()
+    }
+
+    const conversationId = row.dataset.conversationId
+    if (!conversationId) return
 
     const panel = root.querySelector(".lys-chat-panel")
     if (!panel) return
@@ -67,7 +103,6 @@ function initLYSMessages() {
     const personName = row.getAttribute("data-chat-name") || "Connection"
     const personIntent = row.getAttribute("data-chat-intent") || "Connection"
     const personAvatar = row.getAttribute("data-chat-avatar") || ""
-    const conversationKey = row.getAttribute("data-conversation") || ""
 
     if (name) name.textContent = personName
     if (intent) intent.textContent = personIntent
@@ -77,43 +112,63 @@ function initLYSMessages() {
       avatar.alt = personName
     }
 
-    body.innerHTML = ""
+    body.innerHTML = '<div class="lys-chat-day">Loading...</div>'
 
-    const day = document.createElement("div")
-    day.className = "lys-chat-day"
-    day.textContent = "Recent"
-    body.appendChild(day)
+    try {
+      const data = await apiRequest(`/api/conversations/${conversationId}`)
+      const conversation = data.conversation
+      activeConversationId = conversation.id
 
-    const messages = conversations[conversationKey] || []
-    messages.forEach(([direction, text]) => {
-      const bubble = document.createElement("div")
-      bubble.className = `lys-bubble ${direction === "mine" ? "lys-bubble-mine" : "lys-bubble-theirs"}`
-      bubble.textContent = text
-      body.appendChild(bubble)
-    })
+      body.innerHTML = ""
 
-    body.scrollTop = body.scrollHeight
+      const day = document.createElement("div")
+      day.className = "lys-chat-day"
+      day.textContent = "Recent"
+      body.appendChild(day)
 
-    if (scrollOnMobile && window.matchMedia("(max-width: 820px)").matches) {
-      window.setTimeout(() => {
-        panel.scrollIntoView({ behavior: "smooth", block: "start" })
-      }, 40)
+      ;(conversation.messages || []).forEach((message) => {
+        const bubble = document.createElement("div")
+        bubble.className = `lys-bubble ${message.mine ? "lys-bubble-mine" : "lys-bubble-theirs"}`
+        bubble.textContent = message.body
+        body.appendChild(bubble)
+      })
+
+      body.scrollTop = body.scrollHeight
+
+      if (scrollOnMobile && window.matchMedia("(max-width: 820px)").matches) {
+        window.setTimeout(() => {
+          panel.scrollIntoView({ behavior: "smooth", block: "start" })
+        }, 40)
+      }
+    } catch (_error) {
+      body.innerHTML = '<div class="lys-chat-day">Unable to load this conversation.</div>'
     }
   }
 
-  function conversationForCommunityButton(button) {
+  async function conversationForCommunityButton(button) {
     const card = button.closest("[data-community-card]")
     const heading = card && card.querySelector("h2")
     if (!heading) return null
 
     const personName = heading.textContent.split(",")[0].trim().toLowerCase()
+
+    if (conversations.length === 0) {
+      await loadConversations()
+    }
+
+    const conversation = conversations.find((item) => {
+      return (item.other_user?.first_name || "").trim().toLowerCase() === personName
+    })
+
+    if (!conversation) return null
+
     return Array.from(root.querySelectorAll("[data-conversation]")).find((row) => {
       const rowName = (row.getAttribute("data-chat-name") || "").trim().toLowerCase()
       return rowName === personName
     }) || null
   }
 
-  root.addEventListener("click", (event) => {
+  root.addEventListener("click", async (event) => {
     const target = event.target
     if (!(target instanceof Element)) return
 
@@ -122,7 +177,7 @@ function initLYSMessages() {
       event.preventDefault()
       event.stopPropagation()
       event.stopImmediatePropagation()
-      renderConversation(row, true)
+      await renderConversation(row, true)
       return
     }
 
@@ -132,19 +187,63 @@ function initLYSMessages() {
       event.stopPropagation()
       event.stopImmediatePropagation()
 
-      const rowForPerson = conversationForCommunityButton(messageButton)
+      const rowForPerson = await conversationForCommunityButton(messageButton)
       showMessagesPage()
 
       const fallback = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
-      renderConversation(rowForPerson || fallback, true)
+      await renderConversation(rowForPerson || fallback, true)
     }
   }, true)
 
-  const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
-  const messagesPage = root.querySelector('[data-page="messages"]')
-  if (activeRow && messagesPage && !messagesPage.hidden) {
-    renderConversation(activeRow)
+  const messageForm = root.querySelector("[data-message-form]")
+  if (messageForm) {
+    messageForm.addEventListener("submit", async (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      event.stopImmediatePropagation()
+
+      const input = messageForm.querySelector("input[name='message']")
+      const button = messageForm.querySelector("button[type='submit']")
+      const body = root.querySelector("[data-chat-body]")
+      const text = input?.value.trim() || ""
+
+      if (!text || !activeConversationId) return
+
+      if (button) {
+        button.disabled = true
+        button.textContent = "Sending..."
+      }
+
+      try {
+        const data = await apiRequest(`/api/conversations/${activeConversationId}/messages`, {
+          method: "POST",
+          body: JSON.stringify({ message: { body: text } })
+        })
+
+        const bubble = document.createElement("div")
+        bubble.className = "lys-bubble lys-bubble-mine"
+        bubble.textContent = data.message.body
+        body?.appendChild(bubble)
+
+        if (input) input.value = ""
+        if (body) body.scrollTop = body.scrollHeight
+      } finally {
+        if (button) {
+          button.disabled = false
+          button.textContent = "Send"
+        }
+      }
+    }, true)
   }
+
+  loadConversations().then(() => {
+    const activeRow = root.querySelector("[data-conversation].is-active") || root.querySelector("[data-conversation]")
+    const messagesPage = root.querySelector('[data-page="messages"]')
+
+    if (activeRow && messagesPage && !messagesPage.hidden) {
+      renderConversation(activeRow)
+    }
+  }).catch(() => {})
 }
 
 document.addEventListener("turbolinks:load", initLYSMessages)
