@@ -2,8 +2,6 @@
 
 This is the original wireframe and user-flow map submitted during the planning stage of the project.
 
-![Original Last Year Single wireframe](wireframe.jpg)
-
 The wireframe shows the planned flow from the landing screen into account creation and the main application navigation. It includes the profile experience, My Community, member/profile discovery, My Connections, the message list, and individual chat conversations.
 
 The finished capstone evolved visually from this original design, but the major ideas shown here remained part of the product: creating an account, maintaining a profile, building a community of connections, viewing member profiles, and communicating through private messages.
