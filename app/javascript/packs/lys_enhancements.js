@@ -391,9 +391,40 @@ function initLYSEnhancements() {
     profileStream?.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  function archiveCard(card) {
+  function resetSwipeVisual(card) {
+    if (!card) return
+    card.classList.remove("is-swiping-right", "is-swiping-left")
+    card.style.transition = "transform 180ms ease, opacity 180ms ease"
+    card.style.transform = ""
+    card.style.opacity = "1"
+  }
+
+  function animateCardOut(card, direction) {
+    if (!card) return Promise.resolve()
+
+    const right = direction === "right"
+    card.classList.remove("is-swiping-right", "is-swiping-left")
+    card.classList.add(right ? "is-swiping-right" : "is-swiping-left")
+    card.style.transition = "transform 220ms ease, opacity 220ms ease"
+
+    return new Promise((resolve) => {
+      window.requestAnimationFrame(() => {
+        card.style.transform = right
+          ? "translateX(115%) rotate(5deg)"
+          : "translateX(-115%) rotate(-5deg)"
+        card.style.opacity = "0"
+
+        window.setTimeout(resolve, 230)
+      })
+    })
+  }
+
+  async function archiveCard(card) {
     if (!card) return
     const name = profileName(card)
+
+    await animateCardOut(card, "left")
+
     archived.add(name)
     saveArchived()
     updateArchiveCount()
@@ -435,9 +466,11 @@ function initLYSEnhancements() {
       })
 
       connectedNames.add(name)
+      await animateCardOut(card, "right")
       applyPoolFilter(activePool)
       showToast(`Connection request sent to ${name}.`)
     } catch (error) {
+      resetSwipeVisual(card)
       showToast(error.message)
       if (button) {
         button.disabled = false
@@ -807,21 +840,66 @@ function initLYSEnhancements() {
 
     let startX = 0
     let startY = 0
+    let currentX = 0
+    let isHorizontalSwipe = false
 
     photoWrap.addEventListener("touchstart", (event) => {
       const touch = event.touches[0]
       startX = touch.clientX
       startY = touch.clientY
+      currentX = startX
+      isHorizontalSwipe = false
+
+      card.style.transition = "none"
+      card.style.opacity = "1"
+      card.classList.remove("is-swiping-right", "is-swiping-left")
     }, { passive: true })
+
+    photoWrap.addEventListener("touchmove", (event) => {
+      const touch = event.touches[0]
+      currentX = touch.clientX
+
+      const deltaX = currentX - startX
+      const deltaY = touch.clientY - startY
+
+      if (!isHorizontalSwipe) {
+        if (Math.abs(deltaX) < 10) return
+        if (Math.abs(deltaY) > Math.abs(deltaX)) return
+        isHorizontalSwipe = true
+      }
+
+      event.preventDefault()
+
+      card.classList.toggle("is-swiping-right", deltaX > 0)
+      card.classList.toggle("is-swiping-left", deltaX < 0)
+
+      const dragX = deltaX * 0.78
+      const rotation = Math.max(-7, Math.min(7, deltaX / 28))
+      const fade = Math.min(0.28, Math.abs(deltaX) / 650)
+
+      card.style.transform = `translateX(${dragX}px) rotate(${rotation}deg)`
+      card.style.opacity = String(1 - fade)
+    }, { passive: false })
 
     photoWrap.addEventListener("touchend", async (event) => {
       const touch = event.changedTouches[0]
       const deltaX = touch.clientX - startX
       const deltaY = touch.clientY - startY
 
-      if (Math.abs(deltaX) < 90 || Math.abs(deltaX) < Math.abs(deltaY)) return
-      if (deltaX > 0) await connectCard(card)
-      else archiveCard(card)
+      if (!isHorizontalSwipe || Math.abs(deltaX) < 90 || Math.abs(deltaX) < Math.abs(deltaY)) {
+        resetSwipeVisual(card)
+        return
+      }
+
+      if (deltaX > 0) {
+        await connectCard(card)
+      } else {
+        await archiveCard(card)
+      }
+    }, { passive: true })
+
+    photoWrap.addEventListener("touchcancel", () => {
+      resetSwipeVisual(card)
     }, { passive: true })
   })
 
