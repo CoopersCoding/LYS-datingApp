@@ -1,51 +1,27 @@
 # Last Year Single User Stories
 
-These user stories describe the major behaviors implemented in the capstone.
+These are narrative user stories for Last Year Single. Each story follows a representative person through the product and explains what they are trying to accomplish, why it matters to them, and how the application supports that experience.
 
-## Authentication
+## Sarah — Looking for friendship after moving to a new city
 
-- As a new visitor, I want to create an account so that I can join Last Year Single.
-- As a returning member, I want to sign in so that I can access my saved profile and community.
-- As a signed-in member, I want to sign out so that my session is securely ended.
-- As a returning member, I want my saved profile data and profile photo to appear immediately after sign in.
+Sarah is 38 and recently moved to Fort Myers for work. She has a good career and a full life, but she does not know many people locally yet. Traditional dating apps are not what she is looking for because her first priority is building a genuine circle of friends. Sarah creates a Last Year Single account, fills out her profile, uploads a photo, writes a short bio, and marks herself as open to friendship. She selects interests such as live music, walking, local food, and volunteering. When she opens Discover, she chooses the Friendship lane and browses people who share some of those interests. After finding someone who also enjoys volunteering and trying new restaurants, she connects with that person. The new connection appears in My Community, and Sarah can begin a private conversation without having to treat every new relationship as a romantic one.
 
-## Profile
+## Michael — Open to dating but wants a more thoughtful experience
 
-- As a member, I want to edit my first name, last name, city, state, and bio so that my profile represents me.
-- As a member, I want to upload a profile photo from my device.
-- As a member, I want large phone photos to be resized automatically so that I do not have to edit them manually.
-- As a member, I want to choose whether I am open to friendship, dating, or both.
-- As a member, I want to select interests so that other people can understand what I enjoy.
-- As a member, I want my profile changes to persist after refresh, logout, and login.
+Michael is 42 and has used dating apps before, but he is tired of interfaces that feel like endless swiping with very little context. He wants to know more about a person before deciding whether to reach out. Michael joins Last Year Single, creates a profile, marks himself as open to dating, and chooses interests that reflect his real life, including travel, fitness, faith, and coffee. In Discover, he switches to the Dating lane and reads profiles one at a time. Instead of making a decision based only on a photo, he can see a person's location, interests, profile text, and connection intent. When he finds someone he wants to know better, he chooses to connect. That person becomes part of his community, where he can continue the relationship through private messaging. Michael can also remove a connection later if he decides it is no longer a good fit.
 
-## Discover
+## Denise — Open to both friendship and dating
 
-- As a member, I want to browse other members one profile at a time so that discovery feels focused.
-- As a member, I want to switch between friendship and dating discovery.
-- As a member, I want to see shared interests and basic profile information before deciding to connect.
-- As a desktop user, I want normal free scrolling and a visible scrollbar so that I can navigate profiles easily.
-- As a mobile user, I want a smooth touch-oriented profile browsing experience.
-- As a member, I want to pass on a profile for now so that it can be hidden from my current Discover experience.
-- As a member, I want to connect with someone so that they appear in My Community.
+Denise is 45 and does not want to decide in advance that every person she meets must fit into only one category. She would like to make new friends and is also open to dating if the right relationship develops. She creates an account and turns on both friendship and dating in her profile preferences. Denise adds a short bio, uploads a profile image, and chooses several interests. When she uses Discover, she can move between the Friendship and Dating lanes depending on what she wants to explore at that moment. Her profile settings remain saved when she leaves the site and signs back in later. Over time, Denise builds a My Community page that includes different kinds of connections, and she can open a conversation directly from that community instead of having to search for the person again.
 
-## Community
+## Carlos — Returning member who wants continuity
 
-- As a member, I want to see the people I am connected with.
-- As a member, I want to identify connections by friendship or dating intent.
-- As a member, I want to open a message conversation directly from a community member.
-- As a member, I want to remove a connection.
-- As a member, I want a removed connection to stay removed after I navigate away or reload the app.
+Carlos is 40 and has already been using Last Year Single for a while. He has edited his bio, uploaded his preferred profile photo, selected interests, connected with several people, and started a few conversations. When Carlos signs out and comes back later, he expects the application to remember him. After he signs in, his complete profile appears immediately, including his saved photo and preferences. His existing connections remain in My Community, and his previous messages are still available. Carlos can move between conversations, send a new message, refresh the browser, and return later without losing the conversation history. This continuity is important because the application should feel like an actual community rather than a temporary browser demo.
 
-## Messaging
+## Emma — Mobile user managing her profile on her phone
 
-- As a member, I want to see my available conversations.
-- As a member, I want to switch between multiple conversations.
-- As a member, I want to send a private message to a connected person.
-- As a member, I want sent messages to persist after switching conversations or refreshing the browser.
-- As a member, I want only conversation participants to be able to access that conversation's messages.
+Emma is 36 and primarily uses Last Year Single from her phone. She creates her account on mobile, edits her profile, and chooses a picture directly from her phone's photo library. The image is automatically resized before being saved so that she does not need to edit the file herself. She uses the touch-oriented Discover experience to browse profiles and can move between friendship and dating preferences without struggling with a desktop-style layout. Later, she opens her profile again to change her bio and interests. When she saves the changes, they remain there after she refreshes or signs out and signs back in.
 
-## Security and Data
+## What these stories represent
 
-- As a member, I want protected API endpoints to require authentication.
-- As a member, I want connection and messaging actions to be limited to users who are part of those relationships.
-- As a developer, I want database constraints to prevent invalid duplicate relationships.
+Together, these stories describe the core experience the capstone was designed to support: account creation, persistent profiles, profile photos, friendship and dating preferences, interests, discovery, connections, community management, private messaging, mobile use, and returning-user persistence.

@@ -1,133 +1,22 @@
-# Last Year Single Wireframes
+# Last Year Single Wireframe
 
-These simplified wireframes document the major views and interface structure of the capstone.
+This is the original wireframe and user-flow map submitted during the planning stage of the project.
 
-## 1. Landing / Welcome
+![Original Last Year Single wireframe](wireframe.png)
 
-```text
-+--------------------------------------------------------------+
-| LYS  Last Year Single             Member Preview   Join      |
-+--------------------------------------------------------------+
-|                                                              |
-|  A MORE THOUGHTFUL WAY TO CONNECT                            |
-|                                                              |
-|  Meet people who feel like your people.     +--------------+ |
-|                                             | Profile      | |
-|  Friendship, possibility, and real          | Preview      | |
-|  connection in one community.               | Image        | |
-|                                             +--------------+ |
-|  [Create your profile] [Explore]                              |
-|                                                              |
-|  Intentional        Interest-led        Human                 |
-+--------------------------------------------------------------+
-```
+The wireframe shows the planned flow from the landing screen into account creation and the main application navigation. It includes the profile experience, My Community, member/profile discovery, My Connections, the message list, and individual chat conversations.
 
-## 2. Discover
+The finished capstone evolved visually from this original design, but the major ideas shown here remained part of the product: creating an account, maintaining a profile, building a community of connections, viewing member profiles, and communicating through private messages.
 
-```text
-+--------------------------------------------------------------+
-| LYS        Discover   My Community   Messages      Profile   |
-+--------------------------------------------------------------+
-| Discover             |                                         |
-| People worth meeting |    +------------------------------+     |
-|                      |    |                              |     |
-| [Friendship][Dating] |    |        PROFILE PHOTO         |     |
-|                      |    |                              |     |
-| Why this person?     |    +------------------------------+     |
-| Shared interests...  |    Name, age          Intent badge      |
-|                      |    Location                              |
-|                      |    Quote / About                         |
-|                      |    [Interest] [Interest] [Interest]      |
-|                      |    [Not now]       [Connect Now]         |
-|                      |                                         |
-|                      |    normal scroll continues...            |
-+--------------------------------------------------------------+
-```
+## Original planned flow
 
-## 3. My Community
+- Landing / community entry
+- Sign up / account creation
+- Main navigation
+- Profile
+- My Community
+- My Connections
+- Messages
+- Individual chat
 
-```text
-+--------------------------------------------------------------+
-| LYS        Discover   My Community   Messages      Profile   |
-+--------------------------------------------------------------+
-| My Community                                                 |
-|                                                              |
-| +----------------+ +----------------+ +----------------+      |
-| | Member photo   | | Member photo   | | Member photo   |      |
-| | Name           | | Name           | | Name           |      |
-| | Location       | | Location       | | Location       |      |
-| | Intent badge   | | Intent badge   | | Intent badge   |      |
-| | [Message]      | | [Message]      | | [Message]      |      |
-| | [Remove]       | | [Remove]       | | [Remove]       |      |
-| +----------------+ +----------------+ +----------------+      |
-+--------------------------------------------------------------+
-```
-
-## 4. Messages
-
-```text
-+--------------------------------------------------------------+
-| LYS        Discover   My Community   Messages      Profile   |
-+--------------------------------------------------------------+
-| Conversations        | Selected Conversation                  |
-|                      |----------------------------------------|
-| [photo] Mia          | Mia Stone                              |
-| last message...      | Friendship connection                  |
-|                      |                                        |
-| [photo] Noah         |              [their message]           |
-| last message...      |                      [my message]       |
-|                      |                                        |
-| [photo] Sofia        |----------------------------------------|
-| last message...      | [Type a message.............] [Send]   |
-+--------------------------------------------------------------+
-```
-
-## 5. Profile
-
-```text
-+--------------------------------------------------------------+
-| LYS        Discover   My Community   Messages      Profile   |
-+--------------------------------------------------------------+
-| +-------------+   My Profile                                 |
-| | Profile     |   Name                                       |
-| | Photo       |   City, State                                |
-| +-------------+                                              |
-| [Change photo]    About Me                                   |
-|                   profile biography                          |
-|                   Friendship: On/Off                         |
-|                   Dating: On/Off                             |
-|                   Interests: [x] [x] [x]                     |
-|                                                              |
-|                   [Edit Profile]     [Sign Out]               |
-+--------------------------------------------------------------+
-```
-
-## 6. Edit Profile Modal
-
-```text
-+-----------------------------------------------+
-| Edit profile                              [X] |
-|-----------------------------------------------|
-| First name   [____________________________]   |
-| Last name    [____________________________]   |
-| City         [____________________________]   |
-| State        [____________________________]   |
-|                                               |
-| ABOUT ME                                      |
-| [                                           ] |
-| [                                           ] |
-|                                               |
-| PROFILE PHOTO                                 |
-| [Choose File]                                 |
-|                                               |
-| [x] Open to friendship                        |
-| [x] Open to dating                            |
-|                                               |
-| INTERESTS                                     |
-| [x Faith] [x Travel] [ ] Coffee ...           |
-|                                               |
-|              [ Save profile ]                 |
-+-----------------------------------------------+
-```
-
-These wireframes represent the major interface hierarchy and interaction areas used in the finished application.
+This wireframe is included to show the design thinking and planned user flow that informed the final application.

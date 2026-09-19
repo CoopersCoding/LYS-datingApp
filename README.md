@@ -99,15 +99,15 @@ The default development database uses SQLite.
 
 ## User Stories
 
-The project user stories are documented here:
+The project includes narrative user stories built around several representative people and how they would experience Last Year Single.
 
 [View User Stories](docs/user-stories.md)
 
 ## Wireframes
 
-The major application views and interface sketches are documented here:
+The original submitted application wireframe and flow map are documented here:
 
-[View Wireframes](docs/wireframes.md)
+[View Original Wireframe](docs/wireframes.md)
 
 ## Video Demo
 
