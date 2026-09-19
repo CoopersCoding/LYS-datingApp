@@ -69,6 +69,76 @@ profiles = [
     bio: "Travel, faith, and great food are three of my favorite things.",
     profile_image_url: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=700&q=85",
     looking_for_friendship: false, looking_for_romance: true
+  },
+  {
+    first_name: "Ethan", last_name: "Parker", email: "ethan@lastyearsingle.test",
+    gender: "man", city: "Cape Coral", state: "Florida",
+    bio: "Weekend boating, good coffee, and finding new places to eat are my speed.",
+    profile_image_url: "https://i.pravatar.cc/700?img=12",
+    looking_for_friendship: true, looking_for_romance: false
+  },
+  {
+    first_name: "Ava", last_name: "Collins", email: "ava@lastyearsingle.test",
+    gender: "woman", city: "Fort Myers", state: "Florida",
+    bio: "I love live music, long walks, volunteering, and people who actually make plans.",
+    profile_image_url: "https://i.pravatar.cc/700?img=16",
+    looking_for_friendship: true, looking_for_romance: false
+  },
+  {
+    first_name: "Lucas", last_name: "Bennett", email: "lucas@lastyearsingle.test",
+    gender: "man", city: "Estero", state: "Florida",
+    bio: "Outdoors, fitness, local food, and a relaxed weekend with good people.",
+    profile_image_url: "https://i.pravatar.cc/700?img=11",
+    looking_for_friendship: true, looking_for_romance: false
+  },
+  {
+    first_name: "Grace", last_name: "Turner", email: "grace@lastyearsingle.test",
+    gender: "woman", city: "Bonita Springs", state: "Florida",
+    bio: "Faith, travel, coffee, and meaningful conversation are a pretty great combination.",
+    profile_image_url: "https://i.pravatar.cc/700?img=32",
+    looking_for_friendship: true, looking_for_romance: false
+  },
+  {
+    first_name: "Owen", last_name: "Carter", email: "owen@lastyearsingle.test",
+    gender: "man", city: "Naples", state: "Florida",
+    bio: "I am happiest outside, near the water, or trying a restaurant I have never been to.",
+    profile_image_url: "https://i.pravatar.cc/700?img=15",
+    looking_for_friendship: true, looking_for_romance: false
+  },
+  {
+    first_name: "Chloe", last_name: "Martin", email: "chloe@lastyearsingle.test",
+    gender: "woman", city: "Fort Myers", state: "Florida",
+    bio: "Warm, curious, and always up for travel, coffee, or a spontaneous day trip.",
+    profile_image_url: "https://i.pravatar.cc/700?img=47",
+    looking_for_friendship: false, looking_for_romance: true
+  },
+  {
+    first_name: "Natalie", last_name: "Reed", email: "natalie@lastyearsingle.test",
+    gender: "woman", city: "Cape Coral", state: "Florida",
+    bio: "I value faith, kindness, staying active, and laughing a lot.",
+    profile_image_url: "https://i.pravatar.cc/700?img=44",
+    looking_for_friendship: false, looking_for_romance: true
+  },
+  {
+    first_name: "Emma", last_name: "Hayes", email: "emma@lastyearsingle.test",
+    gender: "woman", city: "Estero", state: "Florida",
+    bio: "Travel, live music, fitness, and a great dinner are hard to beat.",
+    profile_image_url: "https://i.pravatar.cc/700?img=45",
+    looking_for_friendship: false, looking_for_romance: true
+  },
+  {
+    first_name: "Lauren", last_name: "Foster", email: "lauren@lastyearsingle.test",
+    gender: "woman", city: "Naples", state: "Florida",
+    bio: "I enjoy volunteering, the outdoors, local food, and conversations that go somewhere.",
+    profile_image_url: "https://i.pravatar.cc/700?img=49",
+    looking_for_friendship: false, looking_for_romance: true
+  },
+  {
+    first_name: "Rachel", last_name: "Brooks", email: "rachel@lastyearsingle.test",
+    gender: "woman", city: "Bonita Springs", state: "Florida",
+    bio: "Coffee, walking, travel, and faith are four things that make life better.",
+    profile_image_url: "https://i.pravatar.cc/700?img=48",
+    looking_for_friendship: false, looking_for_romance: true
   }
 ]
 

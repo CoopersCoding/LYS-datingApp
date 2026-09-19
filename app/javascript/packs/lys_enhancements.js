@@ -23,7 +23,20 @@ function initLYSEnhancements() {
     Maya: "woman",
     Daniel: "man",
     Olivia: "woman",
-    Marcus: "man"
+    Marcus: "man",
+    Mia: "woman",
+    Noah: "man",
+    Sofia: "woman",
+    Ethan: "man",
+    Ava: "woman",
+    Lucas: "man",
+    Grace: "woman",
+    Owen: "man",
+    Chloe: "woman",
+    Natalie: "woman",
+    Emma: "woman",
+    Lauren: "woman",
+    Rachel: "woman"
   }
 
   function csrfToken() {
@@ -928,6 +941,13 @@ function initLYSEnhancements() {
 
     updateArchiveCount()
   }
+
+  document.addEventListener("lys:connectionschanged", async () => {
+    try {
+      await loadDiscoverState()
+      showToast("Connection removed. They are back in Discover.")
+    } catch (_error) {}
+  })
 
   initializeSession()
 }

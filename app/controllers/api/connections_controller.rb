@@ -51,11 +51,11 @@ class Api::ConnectionsController < ApplicationController
   end
 
   def destroy
-    unless @connection.requester_id == current_user.id
-      return render json: { error: "Only the requester can cancel this connection." }, status: :forbidden
+    unless [@connection.requester_id, @connection.recipient_id].include?(current_user.id)
+      return render json: { error: "You are not part of this connection." }, status: :forbidden
     end
 
-    @connection.destroy
+    @connection.destroy!
     render json: { success: true }
   end
 

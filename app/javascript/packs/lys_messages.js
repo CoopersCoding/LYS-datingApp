@@ -90,6 +90,7 @@ function initLYSMessages() {
             <p>You are connected. Keep the conversation going when you are ready.</p>
             <div class="lys-community-actions">
               <button type="button" class="lys-text-action" data-open-conversation="${conversation.id}">Message</button>
+              <button type="button" class="lys-text-action" data-remove-connection="${conversation.connection_id}" data-remove-name="${user.first_name}">Remove connection</button>
             </div>
           </div>
         </article>
@@ -155,6 +156,30 @@ function initLYSMessages() {
   })
 
   communityGrid?.addEventListener("click", async (event) => {
+    const removeButton = event.target.closest("[data-remove-connection]")
+    if (removeButton) {
+      const name = removeButton.dataset.removeName || "this person"
+      if (!window.confirm(`Remove ${name} from your connections? They will return to Discover.`)) return
+
+      removeButton.disabled = true
+      removeButton.textContent = "Removing..."
+
+      try {
+        await apiRequest(`/api/connections/${removeButton.dataset.removeConnection}`, {
+          method: "DELETE"
+        })
+
+        activeConversationId = null
+        await loadConversations()
+        document.dispatchEvent(new CustomEvent("lys:connectionschanged"))
+      } catch (error) {
+        window.alert(error.message)
+        removeButton.disabled = false
+        removeButton.textContent = "Remove connection"
+      }
+      return
+    }
+
     const button = event.target.closest("[data-open-conversation]")
     if (!button) return
     window.LYS?.showPage("messages")
