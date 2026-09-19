@@ -2,7 +2,6 @@ class Api::ConversationsController < ApplicationController
   before_action :require_user!
 
   def index
-    ensure_demo_conversations!
     conversations = accessible_conversations.includes(:messages)
 
     render json: {
@@ -16,43 +15,6 @@ class Api::ConversationsController < ApplicationController
   end
 
   private
-
-  def ensure_demo_conversations!
-    demo_emails = %w[
-      mia@lastyearsingle.test
-      noah@lastyearsingle.test
-      sofia@lastyearsingle.test
-    ]
-
-    User.where(email: demo_emails).find_each do |demo_user|
-      next if demo_user.id == current_user.id
-
-      connection = Connection.find_by(requester: current_user, recipient: demo_user) ||
-                   Connection.find_by(requester: demo_user, recipient: current_user)
-
-      unless connection
-        connection = Connection.create!(
-          requester: current_user,
-          recipient: demo_user,
-          connection_type: demo_user.email.start_with?("sofia@") ? "romantic" : "friendship",
-          status: "accepted"
-        )
-      end
-
-      connection.update!(status: "accepted") unless connection.status == "accepted"
-      conversation = Conversation.find_or_create_by!(connection: connection)
-
-      next unless conversation.messages.empty?
-
-      starter = case demo_user.first_name
-                when "Mia" then "Have you tried that little coffee place downtown yet?"
-                when "Noah" then "You mentioned you like being near the water."
-                else "I think travel tells you a lot about a person."
-                end
-
-      conversation.messages.create!(user: demo_user, body: starter)
-    end
-  end
 
   def profile_image_for(user)
     return user.profile_image_url if user.profile_image_url.present?

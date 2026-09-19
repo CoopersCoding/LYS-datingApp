@@ -101,6 +101,33 @@ class FullStackFlowTest < ActionDispatch::IntegrationTest
     assert_equal "Fort Myers", body["city"]
   end
 
+  test "removed connection stays removed when conversations reload" do
+    sender = create_user(email: "remove-sender@example.com", first_name: "Remove")
+    recipient = create_user(email: "mia@lastyearsingle.test", first_name: "Mia")
+
+    connection = Connection.create!(
+      requester: sender,
+      recipient: recipient,
+      connection_type: "friendship",
+      status: "accepted"
+    )
+    Conversation.create!(connection: connection)
+
+    post api_session_path,
+      params: { email: sender.email, password: "password123" },
+      as: :json
+
+    assert_response :success
+
+    delete api_connection_path(connection), as: :json
+    assert_response :success
+    assert_not Connection.exists?(connection.id)
+
+    get api_conversations_path, as: :json
+    assert_response :success
+    assert_not Connection.exists?(connection.id)
+  end
+
   test "users endpoint requires authentication" do
     get api_users_path, as: :json
     assert_response :unauthorized

@@ -29,3 +29,38 @@
     right: -28px;
   }
 }
+
+
+/* Desktop Discover should feel like a normal browsable list.
+   Mobile keeps the card-by-card touch experience from static_pages.css. */
+@media (min-width: 821px) {
+  .lys-profile-stream {
+    overflow-y: auto;
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+  }
+
+  .lys-profile-stream::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+  }
+
+  .lys-profile-stream::-webkit-scrollbar-track {
+    background: var(--lys-soft);
+  }
+
+  .lys-profile-stream::-webkit-scrollbar-thumb {
+    border: 3px solid var(--lys-soft);
+    border-radius: 999px;
+    background: var(--lys-border);
+  }
+
+  .lys-profile-card {
+    min-height: auto;
+    padding-top: 34px;
+    padding-bottom: 58px;
+    scroll-snap-align: none;
+  }
+}
