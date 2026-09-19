@@ -54,6 +54,16 @@ class Api::ConversationsController < ApplicationController
     end
   end
 
+  def profile_image_for(user)
+    return user.profile_image_url if user.profile_image_url.present?
+
+    {
+      "mia@lastyearsingle.test" => "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=85",
+      "noah@lastyearsingle.test" => "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=85",
+      "sofia@lastyearsingle.test" => "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=700&q=85"
+    }[user.email]
+  end
+
   def accessible_conversations
     Conversation
       .joins(:connection)
@@ -81,7 +91,7 @@ class Api::ConversationsController < ApplicationController
         last_name: other_user.last_name,
         city: other_user.city,
         state: other_user.state,
-        profile_image_url: other_user.profile_image_url
+        profile_image_url: profile_image_for(other_user)
       },
       last_message: latest_message&.body,
       updated_at: conversation.updated_at
