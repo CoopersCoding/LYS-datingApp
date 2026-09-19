@@ -558,9 +558,6 @@ function initLYSEnhancements() {
   async function enterApp(user) {
     renderCurrentProfile(user)
 
-    const fullUser = await loadCurrentProfile()
-    if (fullUser) renderCurrentProfile(fullUser)
-
     await loadDiscoverState()
     closeAuth()
 
@@ -569,6 +566,8 @@ function initLYSEnhancements() {
     window.LYS?.showPage(page)
 
     document.dispatchEvent(new CustomEvent("lys:authchange", { detail: { signedIn: true } }))
+
+    loadCurrentProfile().catch(() => {})
   }
 
   async function signOut() {

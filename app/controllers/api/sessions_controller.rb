@@ -29,8 +29,23 @@ class Api::SessionsController < ApplicationController
       id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,
+      full_name: user.full_name,
       email: user.email,
-      gender: user.gender
+      birthdate: user.birthdate,
+      city: user.city,
+      state: user.state,
+      gender: user.gender,
+      bio: user.bio,
+      profile_image_url: user.profile_image_url,
+      looking_for_friendship: user.looking_for_friendship,
+      looking_for_romance: user.looking_for_romance,
+      interests: user.interests.order(:name).map do |interest|
+        {
+          id: interest.id,
+          name: interest.name,
+          category: interest.category
+        }
+      end
     }
   end
 end

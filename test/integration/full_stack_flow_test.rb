@@ -79,6 +79,26 @@ class FullStackFlowTest < ActionDispatch::IntegrationTest
     assert_includes bodies, "This should persist."
   end
 
+  test "login response includes the complete profile" do
+    user = create_user(email: "photo@example.com", first_name: "Photo")
+    user.update!(
+      profile_image_url: "data:image/jpeg;base64,example",
+      bio: "Saved profile",
+      city: "Fort Myers"
+    )
+
+    post api_session_path,
+      params: { email: user.email, password: "password123" },
+      as: :json
+
+    assert_response :success
+
+    body = JSON.parse(response.body).fetch("user")
+    assert_equal user.profile_image_url, body["profile_image_url"]
+    assert_equal "Saved profile", body["bio"]
+    assert_equal "Fort Myers", body["city"]
+  end
+
   test "users endpoint requires authentication" do
     get api_users_path, as: :json
     assert_response :unauthorized
