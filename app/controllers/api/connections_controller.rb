@@ -58,8 +58,20 @@ class Api::ConnectionsController < ApplicationController
       return render json: { error: "You are not part of this connection." }, status: :forbidden
     end
 
-    @connection.destroy!
+    Connection.transaction do
+      conversation = @connection.conversation
+      conversation&.messages&.delete_all
+      conversation&.delete
+      @connection.delete
+    end
+
     render json: { success: true }
+  rescue StandardError => error
+    Rails.logger.error(
+      "[connections#destroy] connection_id=#{params[:id]} user_id=#{current_user&.id} " \
+      "#{error.class}: #{error.message}"
+    )
+    render json: { error: "Unable to remove this connection right now." }, status: :unprocessable_entity
   end
 
   private

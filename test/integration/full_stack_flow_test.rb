@@ -111,7 +111,8 @@ class FullStackFlowTest < ActionDispatch::IntegrationTest
       connection_type: "friendship",
       status: "accepted"
     )
-    Conversation.create!(connection: connection)
+    conversation = Conversation.create!(connection: connection)
+    conversation.messages.create!(user: sender, body: "A message that must be removed with the connection.")
 
     post api_session_path,
       params: { email: sender.email, password: "password123" },
@@ -122,6 +123,8 @@ class FullStackFlowTest < ActionDispatch::IntegrationTest
     delete api_connection_path(connection), as: :json
     assert_response :success
     assert_not Connection.exists?(connection.id)
+    assert_not Conversation.exists?(conversation.id)
+    assert_equal 0, Message.where(conversation_id: conversation.id).count
 
     get api_conversations_path, as: :json
     assert_response :success

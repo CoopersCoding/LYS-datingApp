@@ -29,7 +29,9 @@ function initLYSMessages() {
     const data = await response.json().catch(() => ({}))
 
     if (!response.ok) {
-      const message = data.error || (data.errors && data.errors.join(", ")) || "Something went wrong."
+      const message = data.error ||
+        (data.errors && data.errors.join(", ")) ||
+        `Request failed (${response.status} ${response.statusText}).`
       throw new Error(message)
     }
 
