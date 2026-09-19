@@ -30,6 +30,13 @@ function initLYSEnhancements() {
     return document.querySelector("meta[name='csrf-token']")?.content || ""
   }
 
+  function installCsrfToken(token) {
+    if (!token) return
+
+    const meta = document.querySelector("meta[name='csrf-token']")
+    if (meta) meta.setAttribute("content", token)
+  }
+
   async function apiRequest(path, options = {}) {
     const headers = Object.assign({ "Accept": "application/json" }, options.headers || {})
     if (options.body && !headers["Content-Type"]) headers["Content-Type"] = "application/json"
@@ -684,6 +691,7 @@ function initLYSEnhancements() {
           password: form.elements.password.value
         })
       })
+      installCsrfToken(data.csrf_token)
       await enterApp(data.user)
       showToast(`Welcome back, ${data.user.first_name}.`)
     } catch (error) {
@@ -718,6 +726,7 @@ function initLYSEnhancements() {
           }
         })
       })
+      installCsrfToken(data.csrf_token)
       await enterApp(data.user)
       showToast(`Welcome, ${data.user.first_name}.`)
     } catch (error) {

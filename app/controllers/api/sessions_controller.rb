@@ -11,7 +11,10 @@ class Api::SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       reset_session
       session[:user_id] = user.id
-      render json: { user: session_user_json(user) }
+      render json: {
+        user: session_user_json(user),
+        csrf_token: form_authenticity_token
+      }
     else
       render json: { error: "Invalid email or password." }, status: :unauthorized
     end

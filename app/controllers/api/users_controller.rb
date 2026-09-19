@@ -16,7 +16,10 @@ class Api::UsersController < ApplicationController
 
     if user.save
       session[:user_id] = user.id
-      render json: { user: private_profile_json(user) }, status: :created
+      render json: {
+        user: private_profile_json(user),
+        csrf_token: form_authenticity_token
+      }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end

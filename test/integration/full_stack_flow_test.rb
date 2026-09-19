@@ -93,7 +93,9 @@ class FullStackFlowTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    body = JSON.parse(response.body).fetch("user")
+    payload = JSON.parse(response.body)
+    body = payload.fetch("user")
+    assert payload["csrf_token"].present?
     assert_equal user.profile_image_url, body["profile_image_url"]
     assert_equal "Saved profile", body["bio"]
     assert_equal "Fort Myers", body["city"]
