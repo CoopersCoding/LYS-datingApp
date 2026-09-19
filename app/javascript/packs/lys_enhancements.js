@@ -481,7 +481,8 @@ function initLYSEnhancements() {
       connectedNames.add(name)
       await animateCardOut(card, "right")
       applyPoolFilter(activePool)
-      showToast(`Connection request sent to ${name}.`)
+      document.dispatchEvent(new CustomEvent("lys:connectionschanged"))
+      showToast(`${name} added to your community.`)
     } catch (error) {
       resetSwipeVisual(card)
       showToast(error.message)

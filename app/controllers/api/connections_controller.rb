@@ -20,14 +20,17 @@ class Api::ConnectionsController < ApplicationController
     connection = current_user.sent_connections.new(
       recipient_id: connection_params[:recipient_id],
       connection_type: connection_params[:connection_type],
-      status: "pending"
+      status: "accepted"
     )
 
-    if connection.save
-      render json: { connection: connection_json(connection) }, status: :created
-    else
-      render json: { errors: connection.errors.full_messages }, status: :unprocessable_entity
+    connection.transaction do
+      connection.save!
+      Conversation.create!(connection: connection)
     end
+
+    render json: { connection: connection_json(connection.reload) }, status: :created
+  rescue ActiveRecord::RecordInvalid => error
+    render json: { errors: error.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   def update

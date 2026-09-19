@@ -234,6 +234,12 @@ function initLYSMessages() {
     }
   })
 
+  document.addEventListener("lys:connectionschanged", async () => {
+    try {
+      await loadConversations()
+    } catch (_error) {}
+  })
+
   document.addEventListener("lys:authchange", async (event) => {
     if (!event.detail.signedIn) {
       conversations = []
